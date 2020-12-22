@@ -7,7 +7,11 @@ const auth = async(req, res, next) => {
     try {
         jwt.verify(token, key, (err, decoded) => {      
             if (err) {
-              return res.json({ mensaje: 'Invalid token' });    
+              return res.status(500).json({
+                success:false,
+                statusCode:500,
+                message: "Invalid token"
+            })  
             } else {
               req.decoded = decoded;  
               next();
@@ -16,7 +20,7 @@ const auth = async(req, res, next) => {
         console.log(req.decoded)
     } catch (error) {
         return res.status(500).json({
-            success:state,
+            success:false,
             statusCode:500,
             message: "Token error"
         })
