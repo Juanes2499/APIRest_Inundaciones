@@ -28,8 +28,9 @@ module.exports = {
         consultar_nodoSensor((err, result, state) => {
             if(err){
                 console.log(err);
-                return res.status(500).json({
+                return res.status(403).json({
                     success:state,
+                    statusCode:403,
                     message: "Database get error - error in consultarNodoSensor"
                 })
             }
@@ -73,6 +74,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: state,
+                statusCode:200,
                 message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully updated`
             });
         })
@@ -91,6 +93,7 @@ module.exports = {
             }
             return res.status(200).json({
                 success: state,
+                statusCode: 200,
                 message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully deleted`
             })
         })

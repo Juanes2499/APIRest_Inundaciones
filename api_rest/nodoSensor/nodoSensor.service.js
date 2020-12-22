@@ -69,7 +69,7 @@ module.exports={
                         (error, result) => {
                             console.log(result);
                             if(error){
-                                return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, null, false);
+                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, null, false);
                             }
                             return callback(null, null, true);
                         }
@@ -94,7 +94,7 @@ module.exports={
                         [data.id_nodo_sensor],
                         (error, result) => {
                             if(error){
-                                return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, null, false);
+                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be deleted`, null, false);
                             }
                             return callback(null, null, true)
                         }
