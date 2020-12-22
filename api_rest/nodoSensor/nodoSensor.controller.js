@@ -14,12 +14,13 @@ module.exports = {
                 console.log(err);
                 return res.status(500).json({
                     success:state,
+                    statusCode:500,
                     message: "Database create error - crearNodoSensor"
                 })
             }
             return res.status(201).json({
                 success:state,
-                statusCode:200
+                statusCode:201
             })
         })
     },
@@ -32,7 +33,7 @@ module.exports = {
                     message: "Database get error - error in consultarNodoSensor"
                 })
             }
-            return res.json({
+            return res.status(200).json({
                 success: state,
                 statusCode: 200,
                 data:result
@@ -47,7 +48,7 @@ module.exports = {
                 return res.status(403).json({
                     success: state, 
                     statusCode: 403,
-                    message: "Database pur error - error in consultarNodoSensorByID",
+                    message: "Database get error - error in consultarNodoSensorByID",
                     return: err
                 });
             }
@@ -66,7 +67,7 @@ module.exports = {
                 return res.status(403).json({
                     success: state, 
                     statusCode: 403,
-                    message: "Database pur error - error in actualizarNodoSensor",
+                    message: "Database put error - error in actualizarNodoSensor",
                     return: err
                 });
             }
@@ -84,7 +85,7 @@ module.exports = {
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
-                    message: "Database connection error - error in eliminarNodoSensor",
+                    message: "Database delete error - error in eliminarNodoSensor",
                     return: err
                 });
             }

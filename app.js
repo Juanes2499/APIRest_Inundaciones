@@ -1,6 +1,7 @@
 require("dotenv").config()
 const express = require('express');
 const app = express();
+//const auth = require('./shared/authentication');
 
 const userRouter = require('./api_rest/users/user.router');
 const nodoSensorRouter = require('./api_rest/nodoSensor/nodoSensor.router');
@@ -26,6 +27,7 @@ const ServerDeploy = new Promise((resolve,reject)=>{
         resolve();
     });
 })
+
 ServerDeploy
     .then(()=>{
         console.log(`The server was deployed on ${process.env.PORT_SERVER} port`);

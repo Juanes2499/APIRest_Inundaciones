@@ -6,12 +6,14 @@ const {
     eliminarNodoSensor,
 } = require('./nodoSensor.controller');
 
+const auth = require('./../../shared/authentication');
+
 const router = require('express').Router();
 
-router.post("/", crearNodoSensor);
+router.post("/", auth, crearNodoSensor);
 router.get("/", consultarNodoSensor);
-router.get("/id",consultarNodoSensorByID);
-router.put("/", actualizarNodoSensor);
-router.delete("/", eliminarNodoSensor);
+router.get("/id", consultarNodoSensorByID);
+router.put("/", auth, actualizarNodoSensor);
+router.delete("/", auth, eliminarNodoSensor);
 
 module.exports = router;

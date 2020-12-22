@@ -1,50 +1,69 @@
 const pool = require("../../config/database");
 
 module.exports={
-    create_user: (data, callback)=>{
+    crear_Usuario: (data, callback)=>{
         pool.query(
-            `INSERT INTO registration_user (nombre, apellido, genero, email, password, numero) VALUES (?,?,?,?,?,?)`,
-            [
-                data.nombre,
-                data.apellido,
-                data.genero,
-                data.email,
-                data.password,
-                data.numero,
-            ],
-            (error, results, fields) =>{
-                if(error){
-                    return callback(error)
+            `
+            SELECT * FROM USER
+                WHERE TIPO_DOC_ID = ? OR NUMERO_DOC_ID = ? OR EMAIL = ? `,
+            [data.tipo_doc_id, data.numero_doc_id, data.email],
+            (error, result) => {
+                if(result.length > 0){
+                    return callback(`The register with email: ${data.email} was created`, null, false);
+                } else if (result.length === 0){
+                    pool.query(
+                        `
+                        INSERT 
+                            INTO USER 
+                            (NOMBRES, APELLIDOS, TIPO_DOC_ID, NUMERO_DOC_ID, EMAIL, PASSWORD, FECHA_CREACION, HORA_CREACION)
+                        VALUES 
+                            (?,?,?,?,?,?, CURDATE(), CURTIME())`,
+                        [
+                            data.nombres,
+                            data.apellidos,
+                            data.tipo_doc_id,
+                            data.numero_doc_id,
+                            data.email,
+                            data.password
+                        ],
+                        (error, result) =>{
+                            if(error){
+                                return callback(`The register with email: ${data.email} was created`, null, false)
+                            }
+                            return callback(null, result, true)
+                        }
+                    );
                 }
-                return callback(null, results)
             }
-        );
+        )
     },
-    get_user_by_email: (email, callBack) => {
+    consultar_Usuarios: callback =>{
         pool.query(
-          `SELECT * FROM registration_user WHERE email = ?`,
-          [email],
-          (error, results, fields) => {
-            if (error) {
-              return callBack(error);
-            }
-            return callBack(null, results[0]);
-          }
-        );
-      },
-    get_users: callback =>{
-        pool.query(
-            `SELECT * FROM registration_user`,
+            `SELECT * FROM USER`,
             [],
-            (error, results, fields) =>{
+            (error, result, fields) =>{
                 if(error){
-                    return callback(error);
+                    return callback(error, null, false);
                 }
-                return callback(null, results);
+                return callback(null, result, true);
             }
         );
     },
-    get_user_by_user_id: (id, callback) => {
+    autenticar_ByEmail: (data, callback) => {
+        pool.query(
+            `
+            SELECT * FROM USER 
+                WHERE EMAIL = ?`,
+            [data.email],
+            (error, result) => {
+                if (error) {
+                    return callback(error, null, false);
+                }
+                return callback(null, result, true);
+            }
+        );
+    },
+    /*get_user_by_user_id: (id, callback) => {
         pool.query(
             `SELECT * FROM registration_user WHERE id = ?`,
             [id],
@@ -87,5 +106,5 @@ module.exports={
             return callBack(null, results[0]);
             }
         );
-    }
+    }*/
 }
