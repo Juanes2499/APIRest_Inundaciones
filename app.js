@@ -5,11 +5,12 @@ const app = express();
 
 const userRouter = require('./api_rest/users/user.router');
 const roles = require('./api_rest/Roles/roles.router');
+const configuracionRoles = require('./api_rest/configuracionRoles/configuracionRoles.router');
 const nodoSensorRouter = require('./api_rest/nodoSensor/nodoSensor.router');
 
 app.get("/api",(req, res) =>{
     res.json({
-        success: 1,
+        success: true,
         message: "This API Rest is working"
     });
 });
@@ -18,10 +19,9 @@ app.use(express.json());
 
 //Router
 app.use("/api/users", userRouter);
-app.use("/api/nodoSensor", nodoSensorRouter);
 app.use("/api/roles", roles);
-//app.use("/api/agendarCitas", agendarCitaRouter);
-//app.use("/api/medicamentos", medicamentos);
+app.use("/api/configuracionRol", configuracionRoles);
+app.use("/api/nodoSensor", nodoSensorRouter);
 
 //Desplegar server
 const ServerDeploy = new Promise((resolve,reject)=>{

@@ -2,10 +2,11 @@ const pool = require("../../config/database");
 
 module.exports={
     crear_Usuario: (data, callback)=>{
+        data.email = data.email.toLowerCase();
         pool.query(
             `
             SELECT * FROM USER
-                WHERE TIPO_DOC_ID = ? OR NUMERO_DOC_ID = ? OR EMAIL = ? `,
+                WHERE (TIPO_DOC_ID = ? AND NUMERO_DOC_ID = ?) OR EMAIL = ? `,
             [data.tipo_doc_id, data.numero_doc_id, data.email],
             (error, result) => {
                 if(result.length > 0){

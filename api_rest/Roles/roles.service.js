@@ -21,7 +21,7 @@ module.exports = {
                         [data.nombre_rol, data.detalles],
                         (error, result) => {
                             if(error){
-                                return callback(`The role: ${data.nombre_rol} already exist`, null, false);
+                                return callback(`The role: ${data.nombre_rol} could not be created`, null, false);
                             }
                             return callback(null, result, true);
                         }
