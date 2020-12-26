@@ -60,12 +60,12 @@ module.exports = {
         pool.query(
             `
             SELECT 
+                CR.ID_CONFIGURACION,
                 U.ID_USER,
                 U.NOMBRES, 
                 U.APELLIDOS, 
                 U.TIPO_DOC_ID, 
                 U.NUMERO_DOC_ID, 
-                CR.ID_CONFIGURACION,
                 CR.ID_ROL, 
                 (SELECT 
                     NOMBRE_ROL 
@@ -95,12 +95,12 @@ module.exports = {
         pool.query(
             `
             SELECT 
+                CR.ID_CONFIGURACION,
                 U.ID_USER,
                 U.NOMBRES, 
                 U.APELLIDOS, 
                 U.TIPO_DOC_ID, 
                 U.NUMERO_DOC_ID, 
-                CR.ID_CONFIGURACION,
                 CR.ID_ROL, 
                 (SELECT 
                     NOMBRE_ROL 
@@ -133,12 +133,12 @@ module.exports = {
         pool.query(
             `
             SELECT 
+                CR.ID_CONFIGURACION,
                 U.ID_USER,
                 U.NOMBRES, 
                 U.APELLIDOS, 
                 U.TIPO_DOC_ID, 
                 U.NUMERO_DOC_ID, 
-                CR.ID_CONFIGURACION,
                 CR.ID_ROL, 
                 (SELECT 
                     NOMBRE_ROL 

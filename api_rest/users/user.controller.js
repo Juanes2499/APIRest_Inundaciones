@@ -53,8 +53,6 @@ module.exports = {
                     message: "Database get error - error in consultarUsuarios"
                 })
             }
-            
-            console.log(result)
 
             result.forEach(element => {
                 element.PASSWORD = undefined;
@@ -158,13 +156,9 @@ module.exports = {
 
             if (result) {
 
-                const payloald = {
-                    ID_USER: resultToJson[0].ID_USER,
-                    NOMBRES: resultToJson[0].NOMBRES,
-                    APELLIDOS: resultToJson[0].APELLIDOS,
-                    EMAIL: resultToJson[0].EMAIL,
-                    FECHA_CREACION: resultToJson[0].FECHA_CREACION,
-                }
+                resultToJson[0].PASSWORD = undefined;
+                
+                const payloald = resultToJson[0];
 
                 const key = process.env.TOKEN_KEY.toString();
                 const expiresIn = parseInt(process.env.TOKEN_EXPIRE_IN);

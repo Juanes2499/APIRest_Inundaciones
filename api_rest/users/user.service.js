@@ -52,17 +52,50 @@ module.exports={
     },
     autenticar_ByEmail: (data, callback) => {
         pool.query(
-            `
-            SELECT * FROM USER 
-                WHERE EMAIL = ?`,
-            [data.email],
+            `SELECT * FROM PARAMETROS_CONFIGURACION_API
+                WHERE NOMBRE_PARAMETRO = 'Permisos_usuario_login' `,
+            [],
             (error, result) => {
-                if (error) {
-                    return callback(error, null, false);
+                if(result.length === 0){
+                    return callback(`El parámetro de configuracion de API: Permisos_usuario_login no existe `, null, false);
+                }else if(result.length > 0){
+
+                    const parametroToJson = JSON.parse(JSON.stringify(result));
+                    const valorParametro = parametroToJson[0].VALOR_PARAMETRO;
+
+                    const queryLogin =  `
+                            SELECT 
+                                U.ID_USER,
+                                U.NOMBRES,
+                                U.APELLIDOS,
+                                U.TIPO_DOC_ID,
+                                U.NUMERO_DOC_ID,
+                                U.EMAIL,
+                                U.PASSWORD,
+                                ${valorParametro} 
+                                U.FECHA_CREACION, 
+                                U.HORA_CREACION
+                            FROM USER U 
+                            WHERE 
+                                U.EMAIL = ?
+                            GROUP BY U.EMAIL `;
+
+                    pool.query(
+                        queryLogin
+                        ,
+                        [data.email],
+                        (error, result) => {
+                            if (error) {
+                                console.log(result);
+                                return callback(error, null, false);
+                            }
+                            return callback(null, result, true);
+                        }
+                    );
                 }
-                return callback(null, result, true);
             }
-        );
+        )
+
     },
     /*get_user_by_user_id: (id, callback) => {
         pool.query(
