@@ -149,16 +149,16 @@ module.exports = {
                 });
             }
 
-            const resultToJson = JSON.parse(JSON.stringify(results));
+            console.log(results);
 
-            const result = compareSync(body.password, resultToJson[0].PASSWORD);
+            const result = compareSync(body.password, results.PASSWORD);
             
 
             if (result) {
 
-                resultToJson[0].PASSWORD = undefined;
+                results.PASSWORD = undefined;
                 
-                const payloald = resultToJson[0];
+                const payloald = results;
 
                 const key = process.env.TOKEN_KEY.toString();
                 const expiresIn = parseInt(process.env.TOKEN_EXPIRE_IN);

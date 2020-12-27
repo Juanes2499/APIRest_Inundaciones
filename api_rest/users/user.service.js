@@ -52,44 +52,69 @@ module.exports={
     },
     autenticar_ByEmail: (data, callback) => {
         pool.query(
-            `SELECT * FROM PARAMETROS_CONFIGURACION_API
-                WHERE NOMBRE_PARAMETRO = 'Permisos_usuario_login' `,
-            [],
+            `
+                SELECT 
+                    U.ID_USER,
+                    U.NOMBRES,
+                    U.APELLIDOS,
+                    U.TIPO_DOC_ID,
+                    U.NUMERO_DOC_ID,
+                    U.EMAIL,
+                    U.PASSWORD,
+                    U.FECHA_CREACION, 
+                    U.HORA_CREACION
+                FROM USER U 
+                WHERE 
+                    U.EMAIL = ?
+            `,
+            [data.email],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`El parámetro de configuracion de API: Permisos_usuario_login no existe `, null, false);
+                    return callback(`The user with email: ${data.email} does not exist `, null, false);
                 }else if(result.length > 0){
 
-                    const parametroToJson = JSON.parse(JSON.stringify(result));
-                    const valorParametro = parametroToJson[0].VALOR_PARAMETRO;
+                    const resultToJson = JSON.parse(JSON.stringify(result));
 
-                    const queryLogin =  `
-                            SELECT 
-                                U.ID_USER,
-                                U.NOMBRES,
-                                U.APELLIDOS,
-                                U.TIPO_DOC_ID,
-                                U.NUMERO_DOC_ID,
-                                U.EMAIL,
-                                U.PASSWORD,
-                                ${valorParametro} 
-                                U.FECHA_CREACION, 
-                                U.HORA_CREACION
-                            FROM USER U 
-                            WHERE 
-                                U.EMAIL = ?
-                            GROUP BY U.EMAIL `;
+                    const LoginJson = resultToJson[0];
+
+                    const queryRoles =  `
+                        SELECT 
+                            CR.ID_CONFIGURACION,
+                            U.ID_USER, 
+                            U.EMAIL,
+                            CR.ID_ROL, 
+                            (SELECT 
+                                NOMBRE_ROL 
+                            FROM ROLES R 
+                            WHERE ID_ROL = CR.ID_ROL) NOMBRE_ROL, 
+                            U.FECHA_CREACION, 
+                            U.HORA_CREACION
+                        FROM USER U 
+                        INNER JOIN 
+                            CONFIGURACION_ROLES CR 
+                            ON U.ID_USER = CR.ID_USER
+                        WHERE 
+                            U.EMAIL = ?        
+                    
+                    `;
 
                     pool.query(
-                        queryLogin
+                        queryRoles
                         ,
                         [data.email],
                         (error, result) => {
-                            if (error) {
-                                console.log(result);
-                                return callback(error, null, false);
+                            if(result.length === 0) {
+                                return callback(`The user with email: ${data.email} does not have any role asigned`, null, false);
+                            }else if(result.length > 0){
+                                
+                                const resultRolesToJson = JSON.parse(JSON.stringify(result));
+
+                                resultRolesToJson.forEach(x => {
+                                    LoginJson[`ROL_${x.NOMBRE_ROL}`] = true
+                                });
+
+                                return callback(null, LoginJson, true);
                             }
-                            return callback(null, result, true);
                         }
                     );
                 }
