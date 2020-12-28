@@ -1,16 +1,21 @@
 const pool = require("../../config/database");
+const crypto = require("crypto");
+const base64url = require("base64url");
 
 module.exports={
     crear_nodoSensor: (data, callback) => {
+
+        const token = base64url(crypto.randomBytes(200));
+
         pool.query(
             `
             INSERT 
                 INTO NODO_SENSOR 
-                (LATITUD, LONGITUD, ESTADO, FECHA_CREACION, HORA_CREACION)
+                (TOKEN, LATITUD, LONGITUD, ESTADO, FECHA_CREACION, HORA_CREACION)
             VALUES 
-                (?, ?, ?, CURDATE(), CURTIME())
+                (?, ?, ?, ?, CURDATE(), CURTIME())
             `,
-            [data.latitud, data.longitud, data.estado],
+            [token, data.latitud, data.longitud, data.estado],
             (error, result) => {
                 if(error){
                     return callback(error, null, false);

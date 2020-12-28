@@ -86,22 +86,30 @@ module.exports = {
             }
         )
     },
-    actualizar_variable_ByID: (data, callback) => {
+    actualizar_variable_ByID_ByNombreVariable: (data, callback) => {
 
         data.nombre_variable = data.nombre_variable.toUpperCase();
         data.tipo_dato = data.tipo_dato.toUpperCase();
         
-        const queryConsultarVariableNodoSensorByID = `
+        const queryConsultarVariableNodoSensorByIDByNombreVariable = `
             SELECT * FROM VARIABLES_NODO_SENSOR
-                WHERE ID_VARIABLE = ? 
+                WHERE ID_VARIABLE = ? OR NOMBRE_VARIABLE = ?
         `;
 
         pool.query(
-            queryConsultarVariableNodoSensorByID,
-            [data.id_variable],
+            queryConsultarVariableNodoSensorByIDByNombreVariable,
+            [data.id_variable, data.nombre_variable],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, null, false);
+
+                    if(data.id_variable && data.nombre_variable){
+                        return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                    }else if(data.id_variable){
+                        return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, null, false);
+                    }else if(data.nombre_variable){
+                        return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                    }
+
                 }else if(result.length > 0){
 
                     const rangoMin = Number(data.rango_min);
@@ -124,11 +132,76 @@ module.exports = {
                                 ESTADO = ?,
                                 FECHA_ACTUALIZACION = CURDATE(),
                                 HORA_ACTUALIZACION = CURTIME()
-                            WHERE ID_VARIABLE = ?
+                            WHERE ID_VARIABLE = ? OR NOMBRE_VARIABLE = ? 
                     `;
 
                     pool.query(
-                        
+                        queryActualizarVariableByID,
+                        [data.nombre_variable, data.detalles, data.tipo_dato, data.unidad_medida, data.rango_min, data.rango_max, data.estado, data.id_variable, data.nombre_variable],
+                        (error, result) => {
+                            if(error){
+
+                                if(data.id_variable && data.nombre_variable){
+                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be updated`, null, false);
+                                }else if(data.id_variable){
+                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be updated`, null, false);
+                                }else if(data.nombre_variable){
+                                    return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} could not be updated`, null, false);
+                                }
+
+                            }
+                            return callback(null, null, true);
+                        }
+                    )
+                }
+            }
+        )
+    },
+    eliminar_variable_ByID_ByNombreVariable: (data, callback) => {
+
+        if(data.nombre_variable){
+            data.nombre_variable = data.nombre_variable.toUpperCase();
+        }
+
+        const queryConsultarVariableNodoSensorByIDByNombreVariable = `
+            SELECT * FROM VARIABLES_NODO_SENSOR
+                WHERE ID_VARIABLE = ? OR NOMBRE_VARIABLE = ?
+        `;
+
+        pool.query(
+            queryConsultarVariableNodoSensorByIDByNombreVariable,
+            [data.id_variable, data.nombre_variable],
+            (error, result) => {
+                if(result.length === 0){
+                    if(data.id_variable && data.nombre_variable){
+                        return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                    }else if(data.id_variable){
+                        return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, null, false);
+                    }else if(data.nombre_variable){
+                        return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                    }
+                }else if(result.length > 0){
+
+                    const queryEliminarVariableByIdByNombreVariable = `
+                        DELETE FROM VARIABLES_NODO_SENSOR
+                            WHERE ID_VARIABLE = ? OR NOMBRE_VARIABLE = ?
+                    `;
+
+                    pool.query(
+                        queryEliminarVariableByIdByNombreVariable,
+                        [data.id_variable, data.nombre_variable],
+                        (error, result) => {
+                            if(error){
+                                if(data.id_variable && data.nombre_variable){
+                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, null, false);
+                                }else if(data.id_variable){
+                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be deleted`, null, false);
+                                }else if(data.nombre_variable){
+                                    return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, null, false);
+                                }
+                            }
+                            return callback(null, null, true);
+                        }
                     )
                 }
             }
