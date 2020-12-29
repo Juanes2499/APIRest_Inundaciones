@@ -149,10 +149,7 @@ module.exports = {
                 });
             }
 
-            console.log(results);
-
             const result = compareSync(body.password, results.PASSWORD);
-            
 
             if (result) {
 

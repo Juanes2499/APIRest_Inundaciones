@@ -23,7 +23,7 @@ module.exports = {
                 }else if(rolExist === 0){
                     return callback(`The role with ID_ROL: ${data.id_rol} was not found`, null, false);
                 }else if(userExist > 0 && rolExist > 0){
-                    //const data = data;
+                    
                     pool.query(
                         `
                         SELECT * FROM CONFIGURACION_ROLES
@@ -43,7 +43,6 @@ module.exports = {
                                     [data.id_user, data.id_rol],
                                     (error, result) => {
                                         if(error){
-                                            con
                                             return callback(`The role configuration with ID_USER: ${data.id_user} and ID_ROL: ${data.id_rol} could not be created`, null, false);
                                         }
                                         return callback(null, result, true);
