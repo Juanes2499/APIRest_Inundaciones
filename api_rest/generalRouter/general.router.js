@@ -4,6 +4,7 @@ const configuracionRolesRouter = require('../configuracionRoles/configuracionRol
 const nodoSensorAuth = require('../nodoSensor/nodoSensor.authentication');
 const variablesNodoSensorAuth = require('../variablesNodoSensor/variablesNodoSensor.authentication');
 const configuracionVariablesNodoSensorAuth = require('../configuracionVariablesNodoSensor/configuracionVariblesNodoSensor.authentication');
+const datosNodoSensorAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
 
 const express = require('express');
 const generalRouters = express();
@@ -14,6 +15,7 @@ generalRouters.use("/configuracionRol", configuracionRolesRouter);
 generalRouters.use("/nodoSensor", nodoSensorAuth);
 generalRouters.use("/variablesNodoSensor", variablesNodoSensorAuth);
 generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorAuth);
+generalRouters.use("/datosNodoSensor", datosNodoSensorAuth);
 
 module.exports = generalRouters;
 
