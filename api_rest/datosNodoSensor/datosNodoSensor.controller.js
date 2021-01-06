@@ -1,5 +1,6 @@
 const {
     crear_datoNodoSensor,
+    consutar_datosNodoSensor_dinamico,
 } = require('./datosNodoSensor.service');
 
 module.exports = {
@@ -24,5 +25,28 @@ module.exports = {
                 })
             }
         })
+    },
+    consutarDatosNodoSensorDinamico: (req, res) => {
+
+        const body = req.body;
+        
+        consutar_datosNodoSensor_dinamico(body, (err, result, state) => {
+            if(state === false){
+                console.log(err);
+                return res.status(403).json({
+                    success:state,
+                    statusCode:403,
+                    message: "Database get error - error in consutarDatosNodoSensorDinamico",
+                    return: err
+                });
+            }else if(result.length > 0){
+                return res.status(200).json({
+                    success: state,
+                    statusCode: 200,
+                    data:result
+                })
+            }
+        })
     }
+
 }

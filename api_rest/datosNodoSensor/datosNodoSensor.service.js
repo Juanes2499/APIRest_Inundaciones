@@ -1,5 +1,6 @@
 const pool = require("../../config/database");
 const compararJson = require("../../shared/compararJson");
+const consultaDinamica = require("../../shared/consultaDinamica");
 
 module.exports = {
     crear_datoNodoSensor: (data, callback) => {
@@ -101,6 +102,44 @@ module.exports = {
                             return callback(null, result, true);
                         }
                     )
+                }
+            }
+        )
+    },
+    consutar_datosNodoSensor_dinamico: (data, callback) => {
+
+        let queryBaseConsultarDatosNodoSensorDinamico = `
+            SELECT 
+                DNS.ID_DATO,
+                DNS.ID_NODO_SENSOR,
+                (SELECT LATITUD FROM NODO_SENSOR WHERE ID_NODO_SENSOR = DNS.ID_NODO_SENSOR) LATITUD,
+                (SELECT LONGITUD FROM NODO_SENSOR WHERE ID_NODO_SENSOR = DNS.ID_NODO_SENSOR) LONGITUD,
+                DNS.ID_VARIABLE,
+                (SELECT NOMBRE_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE ID_VARIABLE =  DNS.ID_VARIABLE)NOMBRE_VARIABLE,
+                DNS.VALOR_DATO,
+                DNS.FECHA_CREACION,
+                DNS.HORA_CREACION 
+            FROM DATOS_NODO_SENSOR DNS
+            ORDER BY DNS.FECHA_CREACION DESC, HORA_CREACION DESC
+        `;
+        
+        const queryConsultarDatosNodoSensorDinamico = consultaDinamica(
+            queryBaseConsultarDatosNodoSensorDinamico, 
+            data.seleccionar, 
+            data.condicion,
+            data.agrupar,
+            data.ordernar)
+
+        console.log(queryConsultarDatosNodoSensorDinamico);
+
+        pool.query(
+            queryConsultarDatosNodoSensorDinamico,
+            [],
+            (error, result, fields) => {
+                if(error){
+                    return callback(`There is no any register with the parameters set`, null, false);
+                }else if (result.length > 0){
+                    return callback(null, result, true);
                 }
             }
         )
