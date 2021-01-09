@@ -22,10 +22,15 @@ const consultaDinamica = (queryBase, Select, Where, GroupBy, OrderBy) => {
         let whereValues = Object.values(where);
 
         for (var i = 0; i < lengthWhere; i++) {
-            whereArray.push(`${whereKeys[i].toUpperCase()} = '${whereValues[i]}'`);
+
+            if(whereValues[i].operador){
+                whereValues[i].operador = whereValues[i].operador.toUpperCase()
+            }
+
+            whereArray.push(`${whereValues[i].operador} ${whereKeys[i].toUpperCase()} = '${whereValues[i].dato}'`);
         }
 
-        where =  `WHERE ${whereArray.toString()}`;
+        where =  `WHERE ${whereArray.toString().replace(","," ")}`;
     }
 
     if(groupBy.length === 0){
