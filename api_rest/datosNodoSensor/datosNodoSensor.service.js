@@ -128,9 +128,7 @@ module.exports = {
             data.seleccionar, 
             data.condicion,
             data.agrupar,
-            data.ordernar)
-
-        console.log(queryConsultarDatosNodoSensorDinamico);
+            data.ordernar);
 
         pool.query(
             queryConsultarDatosNodoSensorDinamico,
