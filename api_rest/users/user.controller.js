@@ -1,9 +1,18 @@
-const {create_user, get_users, get_user_by_user_id, update_user, delete_user, get_user_by_email} = require('./user.service');
+const {
+    crear_Usuario, 
+    consultar_Usuarios, 
+    autenticar_ByEmail, 
+    /*update_user, 
+    delete_user, 
+    get_user_by_email*/
+} = require('./user.service');
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+require("dotenv").config()
 
 module.exports = {
-    createUser: (req,res)=>{
+    crearUsuario: (req,res)=>{
+
         const body = req.body;
         const salt = genSaltSync(10);
         
@@ -11,46 +20,53 @@ module.exports = {
             body.password = hashSync(body.password,salt)
             resolve()
         })
+
         encriptPass
             .then()
             .catch((err)=>{
                 console.log(err);
             });
         
-        create_user(body, (err, result)=>{
+        crear_Usuario(body, (err, result, state)=>{
             if(err){
                 console.log(err);
                 return res.status(500).json({
-                    success:0,
-                    message: "Database connection error"
+                    success:state,
+                    statusCode:500,
+                    message: "Database create error - crearUsuario",
+                    return: err
                 })
             }
-            return res.status(200).json({
-                success: 1,
-                data: result
+            return res.status(201).json({
+                success: state,
+                statusCode:201
               });
         });
     },
 
-    getUsers: (req, res) => {
-        get_users((err, results) => {
+    consultarUsuarios: (req, res) => {
+        consultar_Usuarios((err, result, state) => {
             if (err) {
                 console.log(err);
-                return;
+                return res.status(500).json({
+                    success:state,
+                    message: "Database get error - error in consultarUsuarios"
+                })
             }
-            
-            results.forEach(element => {
-                element.password = undefined;
+
+            result.forEach(element => {
+                element.PASSWORD = undefined;
             });
 
-            return res.json({
-                success: 1,
-                data: results
+            return res.status(200).json({
+                success: state,
+                statusCode:200,
+                data: result
             });
         });
     },
 
-    getUserById: (req, res)=>{
+    /*getUserById: (req, res)=>{
         const id = req.params.id;
         get_user_by_user_id(id, (err, results) => {
             if (err) {
@@ -116,43 +132,54 @@ module.exports = {
                 message: "User was deleted successfully"
             });
         });
-    },
+    },*/
 
     login: (req, res) => {
         const body = req.body;
-        get_user_by_email(body.email, (err, results) => {
-          if (err) {
-            console.log(err);
-          }
-          if (!results) {
-            return res.json({
-              success: 0,
-              data: "Invalid email"
-            });
-          }
-          const result = compareSync(body.password, results.password);
-          if (result) {
-            results.email = undefined;
-            results.password = undefined;
-            results.numero = undefined;
-            results.id = undefined;
-            const jsontoken = sign({ result: results }, "qwe1234", {
-              expiresIn: "1h"
-            });
-            return res.json({
-              success: 1,
-              message: "login successfully",
-              nombre: results.nombre,
-              apellido: results.apellido,
-              token: jsontoken,
-              tiempo: "1h"
-            });
-          } else {
-            return res.json({
-              success: 0,
-              data: "Invalid email or password",
-            });
-          }
+        autenticar_ByEmail(body, (err, results, state) => {
+            if (err) {
+                console.log(err);
+            }
+
+            if (!results) {
+                return res.status(500).json({
+                success: state,
+                statusCode: 500,
+                message: "Invalid email"
+                });
+            }
+
+            const result = compareSync(body.password, results.PASSWORD);
+
+            if (result) {
+
+                results.PASSWORD = undefined;
+                
+                const payloald = results;
+
+                const key = process.env.TOKEN_KEY.toString();
+                const expiresIn = parseInt(process.env.TOKEN_EXPIRE_IN);
+
+                const jsontoken = sign(payloald, key, {
+                    expiresIn: expiresIn,
+                });
+
+                return res.json({
+                    success: state,
+                    statusCode:200,
+                    message: "login successfully",
+                    nombre: results.NOMBRES,
+                    apellido: results.APELLIDOS,
+                    token: jsontoken,
+                    tiempo: `${expiresIn/60} minutos`
+                });
+            } else {
+                return res.status(500).json({
+                    success: state,
+                    statusCode: 500,
+                    message: "Invalid email or password",
+                });
+            }
         });
       },
 }

@@ -2,12 +2,11 @@ require("dotenv").config()
 const express = require('express');
 const app = express();
 
-const userRouter = require('./api_rest/users/user.router');
-const nodoSensorRouter = require('./api_rest/nodoSensor/nodoSensor.router');
+const generalRouter = require('./api_rest/generalRouter/general.router');
 
 app.get("/api",(req, res) =>{
     res.json({
-        success: 1,
+        success: true,
         message: "This API Rest is working"
     });
 });
@@ -15,10 +14,8 @@ app.get("/api",(req, res) =>{
 app.use(express.json());
 
 //Router
-app.use("/api/users", userRouter);
-app.use("/api/nodoSensor", nodoSensorRouter);
-//app.use("/api/agendarCitas", agendarCitaRouter);
-//app.use("/api/medicamentos", medicamentos);
+app.use("/api", generalRouter);
+
 
 //Desplegar server
 const ServerDeploy = new Promise((resolve,reject)=>{
@@ -26,6 +23,7 @@ const ServerDeploy = new Promise((resolve,reject)=>{
         resolve();
     });
 })
+
 ServerDeploy
     .then(()=>{
         console.log(`The server was deployed on ${process.env.PORT_SERVER} port`);

@@ -1,37 +1,39 @@
 const {
-    crear_nodoSensor,
-    consultar_nodoSensor_byID,
-    consultar_nodoSensor,
-    actualizar_nodoSensor,
-    eliminar_nodoSensor,
-} = require('./nodoSensor.service');
+    crear_rol,
+    consultar_roles,
+    consultar_roles_ByNombreRol,
+    actualizar_rol_ByID,
+    eliminar_rol_ByID,
+} = require('./roles.service');
 
 module.exports = {
-    crearNodoSensor: (req, res) => {
+    crearRol: (req, res) => {
         const body = req.body;
-        crear_nodoSensor(body, (err, result, state) => {
+        crear_rol(body, (err, result, state) => {
             if(err){
                 console.log(err);
                 return res.status(500).json({
                     success:state,
                     statusCode:500,
-                    message: "Database create error - crearNodoSensor"
+                    message: "Database create error - error in crearRol",
+                    return: err
                 })
             }
             return res.status(201).json({
                 success:state,
-                statusCode:201
+                statusCode:201,
+                message: `The role: ${body.nombre_rol} was successfully created`
             })
         })
     },
-    consultarNodoSensor: (req, res) => {
-        consultar_nodoSensor((err, result, state) => {
+    consultarRoles: (req, res) => {
+        consultar_roles((err, result, state) => {
             if(err){
                 console.log(err);
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
-                    message: "Database get error - error in consultarNodoSensor"
+                    message: "Database get error - error in consultarRoles"
                 })
             }
             return res.status(200).json({
@@ -41,62 +43,61 @@ module.exports = {
             })
         })
     },
-    consultarNodoSensorByID: (req, res) => {
+    consultarRolByNombreRol: (req, res) => {
         const body = req.body;
-        consultar_nodoSensor_byID(body, (err, result, state) => {
+        consultar_roles_ByNombreRol(body, (err, result, state) => {
             if(state === false){
-                console.log(err);
                 return res.status(403).json({
                     success: state, 
                     statusCode: 403,
-                    message: "Database get error - error in consultarNodoSensorByID",
+                    message: "Database get error - error in consultarRolByNombreRol",
                     return: err
                 });
+            }else if(result.length > 0){
+                return res.status(200).json({
+                    success: state,
+                    statusCode: 200,
+                    data:result
+                })
             }
-            return res.json({
-                success: state,
-                statusCode: 200,
-                data:result
-            })
         })
     },
-    actualizarNodoSensor: (req, res) => {
+    actualizarRolByID: (req, res) => {
         const body = req.body;
-        actualizar_nodoSensor(body, (err, result, state) => {
+        actualizar_rol_ByID(body, (err, result, state) => {
             if(state === false){
                 console.log(err);
                 return res.status(403).json({
                     success: state, 
                     statusCode: 403,
-                    message: "Database put error - error in actualizarNodoSensor",
+                    message: "Database put error - error in actualizarRolByID",
                     return: err
                 });
             }
             return res.status(200).json({
                 success: state,
                 statusCode:200,
-                message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully updated`
+                message: `The role with ID_ROL: ${body.id_rol} was successfully updated`
             });
         })
     },
-    eliminarNodoSensor: (req, res) => {
+    eliminarRolByID: (req, res) => {
         const body = req.body;
-        eliminar_nodoSensor(body, (err, result, state) => {
+        eliminar_rol_ByID(body, (err, result, state) => {
             if(state === false){
                 console.log(err);
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
-                    message: "Database delete error - error in eliminarNodoSensor",
+                    message: "Database delete error - error in eliminarRolByID",
                     return: err
                 });
             }
             return res.status(200).json({
                 success: state,
                 statusCode: 200,
-                message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully deleted`
+                message: `The node sensor with ID: ${body.id_rol} was successfully deleted`
             })
         })
     }
-
 }

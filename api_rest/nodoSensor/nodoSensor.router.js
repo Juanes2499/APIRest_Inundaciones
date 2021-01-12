@@ -9,8 +9,8 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearNodoSensor);
-router.get("/", consultarNodoSensor);
-router.get("/id",consultarNodoSensorByID);
+router.get("/",consultarNodoSensor);
+router.get("/id", consultarNodoSensorByID);
 router.put("/", actualizarNodoSensor);
 router.delete("/", eliminarNodoSensor);
 
