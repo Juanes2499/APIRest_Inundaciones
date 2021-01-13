@@ -2,7 +2,10 @@ const pool = require("../../config/database");
 
 module.exports={
     crear_Usuario: (data, callback)=>{
+
+        data.tipo_doc_id = data.tipo_doc_id.toUpperCase();
         data.email = data.email.toLowerCase();
+
         pool.query(
             `
             SELECT * FROM USER
@@ -49,6 +52,129 @@ module.exports={
                 return callback(null, result, true);
             }
         );
+    },
+    consultar_usuarios_byID: (data, callback) => {
+        
+        const queryConsultarUsuarioByID = `
+            SELECT 
+                * 
+            FROM USER 
+            WHERE 
+                ID_USER = ?`;
+
+        pool.query(
+            queryConsultarUsuarioByID,
+            [data.id_user],
+            (error, result)=>{
+                if(result.length === 0){
+                    return callback(`The user with ID_USER ${data.id_user} does not exist `, null, false);
+                }
+                return callback(null, result, true);
+            }
+        );
+    },
+    consultar_usuarios_byEmail: (data, callback) => {
+
+        const queryConsultarUsuarioByEmail = `
+            SELECT 
+                *
+            FROM USER U 
+            WHERE 
+                U.EMAIL LIKE '%${data.email}%'
+        `;
+
+        pool.query(
+            queryConsultarUsuarioByEmail,
+            [],
+            (error, result) => {
+                if(result.length === 0){
+                    return callback(`The user with email: ${data.email} does not exist `, null, false);
+                }
+                return callback(null, result, true);
+            }
+        )
+    },
+    actualizar_usuario_byId: (data, callBack) => {
+
+        data.tipo_doc_id = data.tipo_doc_id.toUpperCase();
+        data.email = data.email.toLowerCase();
+
+        const queryConsutarExistenciaUsuarioByID = `
+            SELECT 
+                * 
+            FROM USER 
+            WHERE 
+                ID_USER = ?
+        `;
+
+        pool.query(
+            queryConsutarExistenciaUsuarioByID,
+            [data.id_user],
+            (error, result) => {
+                if(result.length === 0){
+                    return callback(`The user with ID_USER ${data.id_user} does not exist `, null, false);
+                }else if (result.length > 0){
+
+                    const queryActualizarUsuarioByID = `
+                        UPDATE USER
+                            SET NOMBRES = ?,
+                                APELLIDOS = ?,
+                                TIPO_DOC_ID = ?,
+                                NUMERO_DOC_ID = ?,
+                                EMAIL = ?,
+                                PASSWORD = ?,
+                                FECHA_ACTUALIZACION = CURDATE(),
+                                HORA_ACTUALIZACION = CURTIME()
+                            WHERE ID_USER = ?`;
+            
+                    pool.query(
+                        queryActualizarUsuarioByID,
+                      [data.nombres, data.apellidos, data.tipo_doc_id, data.numero_doc_id, data.email, data.password, data.id_user],
+                      (error, result) => {
+                        if (error) {
+                            return callback(`The register with ID_USER: ${data.id_user} could not be updated`, null, false);
+                        }
+                        return callBack(null, null, true);
+                      }
+                    )
+                }
+            }
+        )
+    },
+    eliminar_usuario_byId: (data, callback) => {
+
+        const queryConsutarExistenciaUsuarioByID = `
+            SELECT 
+                * 
+            FROM USER 
+            WHERE 
+                ID_USER = ?
+        `;
+
+        pool.query(
+            queryConsutarExistenciaUsuarioByID,
+            [data.id_user],
+            (error, result) => {
+                if(result.length === 0){
+                    return callback(`The user with ID_USER ${data.id_user} does not exist `, null, false);
+                }else if (result.length > 0){
+
+                    const queryEliminarUsuarioById = `
+                        DELETE FROM USER WHERE ID_USER = ?
+                    `;
+                    pool.query(
+                        queryEliminarUsuarioById,
+                        [data.id_user],
+                        (error, result) => {
+                        if (error) {
+                            return callback(`The register with ID_USER: ${data.id_user} could not be deleted`, null, false);
+                        }
+                        return callback(null, null, true);
+                        }
+                    );
+                }
+            }
+        )
     },
     autenticar_ByEmail: (data, callback) => {
         pool.query(
@@ -104,7 +230,13 @@ module.exports={
                         [data.email],
                         (error, result) => {
                             if(result.length === 0) {
-                                return callback(`The user with email: ${data.email} does not have any role asigned`, null, false);
+
+                                const resultRolesToJson = JSON.parse(JSON.stringify(result));
+
+                                LoginJson[`ROLES`] = `The user with email: ${data.email} does not have any role asigned`
+
+                                return callback(null, LoginJson, true); 
+
                             }else if(result.length > 0){
                                 
                                 const resultRolesToJson = JSON.parse(JSON.stringify(result));
@@ -122,48 +254,4 @@ module.exports={
         )
 
     },
-    /*get_user_by_user_id: (id, callback) => {
-        pool.query(
-            `SELECT * FROM registration_user WHERE id = ?`,
-            [id],
-            (error, results, fields)=>{
-                if(error){
-                    return callback(error);
-                }
-                return callback(null, results[0]);
-            }
-        );
-    },
-    update_user: (data, callBack) => {
-        pool.query(
-          `UPDATE registration_user SET nombre=?, apellido=?, genero=?, email=?, password=?, numero=? WHERE id = ?`,
-          [
-            data.nombre,
-            data.apellido,
-            data.genero,
-            data.email,
-            data.password,
-            data.numero,
-            data.id
-          ],
-          (error, results, fields) => {
-            if (error) {
-              return callBack(error);
-            }
-            return callBack(null, results[0]);
-          }
-        );
-    },
-    delete_user: (data, callBack) => {
-        pool.query(
-            `DELETE FROM registration_user WHERE id = ?`,
-            [data.id],
-            (error, results, fields) => {
-            if (error) {
-                return callBack(error);
-            }
-            return callBack(null, results[0]);
-            }
-        );
-    }*/
 }
