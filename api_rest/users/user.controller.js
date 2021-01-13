@@ -1,10 +1,11 @@
 const {
     crear_Usuario, 
     consultar_Usuarios, 
-    autenticar_ByEmail, 
-    /*update_user, 
-    delete_user, 
-    get_user_by_email*/
+    consultar_usuarios_byID, 
+    consultar_usuarios_byEmail,
+    actualizar_usuario_byId,
+    eliminar_usuario_byId,
+    autenticar_ByEmail,
 } = require('./user.service');
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -43,7 +44,6 @@ module.exports = {
               });
         });
     },
-
     consultarUsuarios: (req, res) => {
         consultar_Usuarios((err, result, state) => {
             if (err) {
@@ -65,30 +65,52 @@ module.exports = {
             });
         });
     },
-
-    /*getUserById: (req, res)=>{
-        const id = req.params.id;
-        get_user_by_user_id(id, (err, results) => {
+    consultarUsuariosByID: (req, res)=>{
+        const body = req.body;
+        consultar_usuarios_byID(body, (err, result, state) => {
             if (err) {
-                console.log(err);
-                return;
+                return res.status(500).json({
+                    success:state,
+                    message: "Database get error - error in consultarUsuariosByID",
+                    return: err
+                })
             }
-            if (!results) {
-                return res.json({
-                    success: 0,
-                    message: "Register was not found"
-                });
-            }
-            console.log(results)
-            results.password = undefined;
-            return res.json({
-                success: 1,
-                data: results
+
+            result.forEach(element => {
+                element.PASSWORD = undefined;
+            });
+
+            return res.status(200).json({
+                success: state,
+                statusCode:200,
+                data: result
             });
         });
     },
+    consultarUsuariosByEmail: (req, res)=>{
+        const body = req.body;
 
-    updateUser: (req, res) => {
+        consultar_usuarios_byEmail(body, (err, result, state) => {
+            if (err) {
+                return res.status(500).json({
+                    success:state,
+                    message: "Database get error - error in consultarUsuariosByEmail",
+                    return: err
+                })
+            }
+
+            result.forEach(element => {
+                element.PASSWORD = undefined;
+            });
+
+            return res.status(200).json({
+                success: state,
+                statusCode:200,
+                data: result
+            });
+        });
+    },
+    actualizarUsuarioById: (req, res) => {
         const body = req.body;
         const salt = genSaltSync(10);
         
@@ -102,38 +124,41 @@ module.exports = {
                 console.log(err);
             });
 
-        update_user(body, (err, results) => {
-            if (err) {
+            actualizar_usuario_byId(body, (err, result, state) => {
+            if(state === false){
                 console.log(err);
-                return;
+                return res.status(403).json({
+                    success: state, 
+                    statusCode: 403,
+                    message: "Database put error - error in actualizarUsuarioById",
+                    return: err
+                });
             }
-            return res.json({
-                success: 1,
-                message: "Register was updated successfully"
+            return res.status(200).json({
+                success: state,
+                statusCode:200,
+                message: `The user with ID_USER: ${body.id_user} was successfully updated`
             });
         });
     },
-
-    deleteUser: (req, res) => {
-        const data = req.body;
-        delete_user(data, (err, results) => {
-            if (err) {
-                console.log(err);
-                return;
+    eliminarUsuarioById: (req, res) => {
+        const body = req.body;
+        eliminar_usuario_byId(body, (err, result, state) => {
+            if(state === false){
+                return res.status(403).json({
+                    success: state, 
+                    statusCode: 403,
+                    message: "Database delete error - error in eliminarUsuarioById",
+                    return: err
+                });
             }
-            if (!results) {
-            return res.json({
-                success: 0,
-                message: "Register was not found"
-            });
-            }
-            return res.json({
-                success: 1,
-                message: "User was deleted successfully"
+            return res.status(200).json({
+                success: state,
+                statusCode:200,
+                message: `The user with ID_USER: ${body.id_user} was successfully deleted`
             });
         });
-    },*/
-
+    },
     login: (req, res) => {
         const body = req.body;
         autenticar_ByEmail(body, (err, results, state) => {
@@ -143,9 +168,10 @@ module.exports = {
 
             if (!results) {
                 return res.status(500).json({
-                success: state,
-                statusCode: 500,
-                message: "Invalid email"
+                    success: state,
+                    statusCode: 500,
+                    message: "Invalid email",
+                    return: err,
                 });
             }
 
@@ -164,6 +190,19 @@ module.exports = {
                     expiresIn: expiresIn,
                 });
 
+                let date =  new Date();
+                let anoExpedicion = date.getFullYear();
+                let mesExpedicion = date.getMonth()+1;
+                let diaExpedicion = date.getDate();
+                let horaExpedicion = date.getHours();
+                let minutosExpedicion = date.getMinutes();
+
+                if(minutosExpedicion.toString().length === 1){
+                    minutosExpedicion = `0${minutosExpedicion}`;
+                }
+
+                let fechaHoraExpedicion = `${anoExpedicion}/${mesExpedicion}/${diaExpedicion} - ${horaExpedicion}:${minutosExpedicion}`;
+
                 return res.json({
                     success: state,
                     statusCode:200,
@@ -171,7 +210,8 @@ module.exports = {
                     nombre: results.NOMBRES,
                     apellido: results.APELLIDOS,
                     token: jsontoken,
-                    tiempo: `${expiresIn/60} minutos`
+                    expedicion_token: fechaHoraExpedicion,
+                    duracion_token: `${expiresIn/60} minutos`
                 });
             } else {
                 return res.status(500).json({
