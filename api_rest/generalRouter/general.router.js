@@ -1,23 +1,36 @@
-const login = require('../users/login.router');
-const userAuth = require('../users/user.authentication');
-const rolesAuth = require('../Roles/roles.authentication');
-const configuracionRolesAuth = require('../configuracionRoles/configuracionRoles.authentication');
-const nodoSensorAuth = require('../nodoSensor/nodoSensor.authentication');
-const variablesNodoSensorAuth = require('../variablesNodoSensor/variablesNodoSensor.authentication');
-const configuracionVariablesNodoSensorAuth = require('../configuracionVariablesNodoSensor/configuracionVariblesNodoSensor.authentication');
-const datosNodoSensorAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
-
 const express = require('express');
 const generalRouters = express();
 
-generalRouters.use("/login", login);
-generalRouters.use("/users", userAuth);
-generalRouters.use("/roles", rolesAuth);
-generalRouters.use("/configuracionRol", configuracionRolesAuth);
-generalRouters.use("/nodoSensor", nodoSensorAuth);
-generalRouters.use("/variablesNodoSensor", variablesNodoSensorAuth);
-generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorAuth);
-generalRouters.use("/datosNodoSensor", datosNodoSensorAuth);
+let auth = process.env.AUTHENTICATION.toString();
+
+if(auth === "true"){
+
+    console.log(`Authentication = ${auth}`)
+
+    const nodoSensorAuth = require('../nodoSensor/nodoSensor.authentication');
+    const variablesNodoSensorAuth = require('../variablesNodoSensor/variablesNodoSensor.authentication');
+    const configuracionVariablesNodoSensorAuth = require('../configuracionVariablesNodoSensor/configuracionVariblesNodoSensor.authentication');
+    const datosNodoSensorAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
+   
+    generalRouters.use("/nodoSensor", nodoSensorAuth);
+    generalRouters.use("/variablesNodoSensor", variablesNodoSensorAuth);
+    generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorAuth);
+    generalRouters.use("/datosNodoSensor", datosNodoSensorAuth);
+
+}else if (auth === "false"){
+
+    console.log(`Authentication = ${auth}`)
+    
+    const nodoSensorRouter = require('../nodoSensor/nodoSensor.router');
+    const variablesNodoSensorRouter = require('../variablesNodoSensor/variablesNodoSensor.router');
+    const configuracionVariablesNodoSensorRouter = require('../configuracionVariablesNodoSensor/configuracionVariablesNodoSensor.router');
+    const datosNodoSensorRouter = require('../datosNodoSensor/datosNodoSensor.router');
+    
+    generalRouters.use("/nodoSensor", nodoSensorRouter);
+    generalRouters.use("/variablesNodoSensor", variablesNodoSensorRouter);
+    generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorRouter);
+    generalRouters.use("/datosNodoSensor", datosNodoSensorRouter);
+}
 
 module.exports = generalRouters;
 
