@@ -2,6 +2,13 @@ const pool = require("../../config/database");
 
 module.exports = {
     crear_variables_nodoSensor: (data, callback) => {
+        
+        const regexNombreVariable = /^[A-Za-z0-9_]+$/; //Expresión regular que el nombre accepte solo estos caracteres
+
+        if(regexNombreVariable.test(data.nombre_variable) === false){
+            return callback(`The register with NOMBRE_VARIABLES: ${data.nombre_variable} contains characters not allowed, letters, numbers and underscore are allowed `, null, false);
+        }
+
         data.nombre_variable = data.nombre_variable.toUpperCase();
         data.tipo_dato = data.tipo_dato.toUpperCase();
 
@@ -87,6 +94,12 @@ module.exports = {
         )
     },
     actualizar_variable_ByID_ByNombreVariable: (data, callback) => {
+
+        const regexNombreVariable = /^[A-Za-z0-9_]+$/; //Expresión regular que el nombre accepte solo estos caracteres
+
+        if(regexNombreVariable.test(data.nombre_variable) === false){
+            return callback(`The register with NOMBRE_VARIABLES: ${data.nombre_variable} contains characters not allowed, letters, numbers and underscore are allowed `, null, false);
+        }
 
         data.nombre_variable = data.nombre_variable.toUpperCase();
         data.tipo_dato = data.tipo_dato.toUpperCase();
