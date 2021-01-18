@@ -24,11 +24,14 @@ if(auth === "true"){
     const nodoSensorRouter = require('../nodoSensor/nodoSensor.router');
     const variablesNodoSensorRouter = require('../variablesNodoSensor/variablesNodoSensor.router');
     const configuracionVariablesNodoSensorRouter = require('../configuracionVariablesNodoSensor/configuracionVariablesNodoSensor.router');
+    const reglasNodoSensorRouter = require('../reglasNodoSensor/reglasNodoSensor.router');
     const datosNodoSensorRouter = require('../datosNodoSensor/datosNodoSensor.router');
+
     
     generalRouters.use("/nodoSensor", nodoSensorRouter);
     generalRouters.use("/variablesNodoSensor", variablesNodoSensorRouter);
     generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorRouter);
+    generalRouters.use("/reglasNodoSensor", reglasNodoSensorRouter);
     generalRouters.use("/datosNodoSensor", datosNodoSensorRouter);
 }
 
