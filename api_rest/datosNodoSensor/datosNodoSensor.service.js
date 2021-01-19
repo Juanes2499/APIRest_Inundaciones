@@ -187,18 +187,21 @@ module.exports = {
     consutar_datosNodoSensor_dinamico: (data, callback) => {
 
         let queryBaseConsultarDatosNodoSensorDinamico = `
-            SELECT 
+            SELECT
                 DNS.ID_DATO,
                 DNS.ID_NODO_SENSOR,
                 (SELECT LATITUD FROM NODO_SENSOR WHERE ID_NODO_SENSOR = DNS.ID_NODO_SENSOR) LATITUD,
                 (SELECT LONGITUD FROM NODO_SENSOR WHERE ID_NODO_SENSOR = DNS.ID_NODO_SENSOR) LONGITUD,
                 DNS.ID_VARIABLE,
-                (SELECT NOMBRE_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE ID_VARIABLE =  DNS.ID_VARIABLE)NOMBRE_VARIABLE,
+                DNS.NOMBRE_VARIABLE,
                 DNS.VALOR_DATO,
+                DNS.VALOR_NOTIFICADO,
+                DNS.ID_REGLA,
+                DNS.EXPRESION_EVALUADA,
                 DNS.FECHA_CREACION,
-                DNS.HORA_CREACION 
+                DNS.HORA_CREACION
             FROM DATOS_NODO_SENSOR DNS
-            ORDER BY DNS.FECHA_CREACION DESC, HORA_CREACION DESC
+            ORDER BY DNS.FECHA_CREACION DESC, DNS.HORA_CREACION DESC
         `;
         
         const queryConsultarDatosNodoSensorDinamico = consultaDinamica(
@@ -206,7 +209,7 @@ module.exports = {
             data.seleccionar, 
             data.condicion,
             data.agrupar,
-            data.ordernar);
+            data.ordenar);
 
         pool.query(
             queryConsultarDatosNodoSensorDinamico,
