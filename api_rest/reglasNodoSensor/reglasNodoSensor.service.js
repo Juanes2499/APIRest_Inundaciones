@@ -118,7 +118,7 @@ module.exports = {
             [],
             (error, result) => {
                 if(error){
-                    return callback(`There is no any register with the parameters set`, null, false);
+                    return callback(`There is/are no record(s) for rule configuration with the parameter(s) set`, null, false);
                 }else if (result.length > 0){
                     return callback(null, result, true);
                 }
@@ -171,7 +171,7 @@ module.exports = {
                                 const queryComprobarExistenciaRegla = `
                                     SELECT * FROM REGLAS_NODO_SENSOR
                                         WHERE ID_NODO_SENSOR = ? AND NOMBRE_VARIABLE = ?
-                                `;
+                                `; //Verificar si al actualizar no existe una regla igual
 
                                 pool.query(
                                     queryComprobarExistenciaRegla,
