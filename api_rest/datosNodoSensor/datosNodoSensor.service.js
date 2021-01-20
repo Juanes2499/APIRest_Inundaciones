@@ -151,9 +151,10 @@ module.exports = {
                                     const queryInsertarDatosNodoSensor = `
                                         INSERT 
                                             INTO DATOS_NODO_SENSOR
-                                            (ID_NODO_SENSOR, ID_VARIABLE, NOMBRE_VARIABLE, VALOR_DATO, VALOR_NOTIFICADO, ID_REGLA, EXPRESION_EVALUADA, FECHA_CREACION, HORA_CREACION)
+                                            (ID_DATO, ID_NODO_SENSOR, ID_VARIABLE, NOMBRE_VARIABLE, VALOR_DATO, VALOR_NOTIFICADO, ID_REGLA, EXPRESION_EVALUADA, FECHA_CREACION, HORA_CREACION)
                                         VALUES 
                                             (
+                                                UUID(),
                                                 ?,
                                                 (SELECT ID_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE NOMBRE_VARIABLE = ?),
                                                 ?,

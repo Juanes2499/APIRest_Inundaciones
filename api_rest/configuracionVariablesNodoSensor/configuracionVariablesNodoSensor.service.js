@@ -49,9 +49,9 @@ module.exports = {
                                 const queryCrearConfiguracionVariableNodoSensor = `
                                     INSERT
                                         INTO CONFIGURACION_VARIABLES_NODO_SENSOR
-                                        (ID_NODO_SENSOR, ID_VARIABLE, NOMBRE_VARIABLE, FECHA_CREACION, HORA_CREACION)
+                                        (ID_CONFIGURACION, ID_NODO_SENSOR, ID_VARIABLE, NOMBRE_VARIABLE, FECHA_CREACION, HORA_CREACION)
                                     VALUES
-                                        (?, (SELECT ID_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE NOMBRE_VARIABLE = ?), ?, CURDATE(), CURTIME())
+                                        (UUID(), ?, (SELECT ID_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE NOMBRE_VARIABLE = ?), ?, CURDATE(), CURTIME())
                                 `;
 
                                 pool.query(

@@ -37,9 +37,9 @@ module.exports = {
                     const queryCrearVariable = `
                         INSERT 
                             INTO VARIABLES_NODO_SENSOR
-                            (NOMBRE_VARIABLE, DETALLES, TIPO_DATO, UNIDAD_MEDIDA, RANGO_MIN, RANGO_MAX, ESTADO, FECHA_CREACION, HORA_CREACION)
+                            (ID_VARIABLE, NOMBRE_VARIABLE, DETALLES, TIPO_DATO, UNIDAD_MEDIDA, RANGO_MIN, RANGO_MAX, ESTADO, FECHA_CREACION, HORA_CREACION)
                         VALUES
-                            (?, ?, ?, ?, ?, ?, ?, CURDATE(), CURTIME())
+                            (UUID(), ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURTIME())
                     `;
 
                     pool.query(

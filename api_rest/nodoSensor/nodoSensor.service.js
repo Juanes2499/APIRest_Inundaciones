@@ -11,11 +11,11 @@ module.exports={
             `
             INSERT 
                 INTO NODO_SENSOR 
-                (TOKEN, LATITUD, LONGITUD, ESTADO, FECHA_CREACION, HORA_CREACION)
+                (ID_NODO_SENSOR, TOKEN, LATITUD, LONGITUD, DISPOSITIVO_ADQUISICION, ESTADO, FECHA_CREACION, HORA_CREACION)
             VALUES 
-                (?, ?, ?, ?, CURDATE(), CURTIME())
+                (UUID(), ?, ?, ?, ?, ?, CURDATE(), CURTIME())
             `,
-            [token, data.latitud, data.longitud, data.estado],
+            [token, data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado],
             (error, result) => {
                 if(error){
                     return callback(error, null, false);
