@@ -83,13 +83,17 @@ module.exports = {
             data.agrupar,
             data.ordenar
         );
-        
+
+        if(queryConsultarVariablesNodoSensorDinamico.query == null && queryConsultarVariablesNodoSensorDinamico.error === true){
+            return callback(queryConsultarVariablesNodoSensorDinamico.message, null, false);
+        }
+
         pool.query(
-            queryConsultarVariablesNodoSensorDinamico,
+            queryConsultarVariablesNodoSensorDinamico.query,
             [],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`There is/are no record(s) for sensor node variables with the parameter(s) set`, null, false);
+                    return callback(`There is/are no record(s) for variables sensor node with the parameter(s) set`, null, false);
                 }
                 return callback(null, result, true);
             }

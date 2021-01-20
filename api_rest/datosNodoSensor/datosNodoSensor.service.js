@@ -212,12 +212,16 @@ module.exports = {
             data.agrupar,
             data.ordenar);
 
+        if(queryConsultarDatosNodoSensorDinamico.query == null && queryConsultarDatosNodoSensorDinamico.error === true){
+            return callback(queryConsultarDatosNodoSensorDinamico.message, null, false);
+        }
+
         pool.query(
-            queryConsultarDatosNodoSensorDinamico,
+            queryConsultarDatosNodoSensorDinamico.query,
             [],
             (error, result, fields) => {
-                if(error){
-                    return callback(`There is no any register with the parameters set`, null, false);
+                if(result.length === 0){
+                    return callback(`There is/are no record(s) for data sensor node with the parameter(s) set`, null, false);
                 }else if (result.length > 0){
                     return callback(null, result, true);
                 }

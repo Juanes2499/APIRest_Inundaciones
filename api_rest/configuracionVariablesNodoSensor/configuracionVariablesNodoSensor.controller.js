@@ -36,13 +36,14 @@ module.exports = {
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
-                    message: "Database get error - error in consultarConfiguracionesVariablesNodoSensor"
+                    message: "Database get error - error in consultarConfiguracionesVariablesNodoSensor",
+                    return: err
                 });
             }
             return res.status(200).json({
                 success: state,
                 statusCode: 200,
-                data:result
+                data:result,
             })
         })
     },

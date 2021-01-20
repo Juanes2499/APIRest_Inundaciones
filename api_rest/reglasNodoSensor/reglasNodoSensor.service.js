@@ -113,11 +113,16 @@ module.exports = {
             data.ordenar
         );
 
+        if(queryConsultarReglasNodoSensorDinamico.query == null && queryConsultarReglasNodoSensorDinamico.error === true){
+            return callback(queryConsultarReglasNodoSensorDinamico.message, null, false);
+        }
+
         pool.query(
-            queryConsultarReglasNodoSensorDinamico,
+            queryConsultarReglasNodoSensorDinamico.query,
             [],
             (error, result) => {
-                if(error){
+
+                if(result.length === 0){
                     return callback(`There is/are no record(s) for rule configuration with the parameter(s) set`, null, false);
                 }else if (result.length > 0){
                     return callback(null, result, true);

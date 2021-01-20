@@ -128,13 +128,18 @@ module.exports = {
             data.agrupar,
             data.ordenar
         );
-        
+
+        if(queryConsultarConfiguracionVariablesNodoSensorDinamico.query == null && queryConsultarConfiguracionVariablesNodoSensorDinamico.error === true){
+            return callback(queryConsultarConfiguracionVariablesNodoSensorDinamico.message, null, false);
+        }
+
         pool.query(
-            queryConsultarConfiguracionVariablesNodoSensorDinamico,
+            queryConsultarConfiguracionVariablesNodoSensorDinamico.query,
             [],
             (error, result) => {
-               if(error){
-                return callback(error, null, false);
+                
+               if(result.length === 0){
+                return callback(`There is/are no record(s) for variable configuration with the parameter(s) set`, null, false);
                }
                return callback(null, result, true);
             }
