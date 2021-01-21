@@ -14,7 +14,8 @@ module.exports = {
             url_endpoint: true,
             modulo: true,
             endpoint: true,   
-            metodo: true,
+            metodo_primario: true,
+            metodo_secundario: true,
             detalles: true, 
             mensaje_pantalla: true
         };

@@ -6,7 +6,8 @@ module.exports = {
 
         data.codigo_error = data.codigo_error.toUpperCase();
         data.modulo = data.modulo.toUpperCase();
-        data.metodo = data.metodo.toUpperCase();
+        data.metodo_primario = data.metodo_primario.toUpperCase();
+        data.metodo_secundario = data.metodo_secundario.toUpperCase();
 
         const queryConsultarExisteciaError = `
             SELECT * FROM ERRORES_LOG_EJECUCION
@@ -15,12 +16,13 @@ module.exports = {
                 AND URL_ENDPOINT = ? 
                 AND MODULO = ? 
                 AND ENDPOINT = ? 
-                AND METODO = ? 
+                AND METODO_PRIMARIO = ?
+                AND METODO_SECUNDARIO = ?  
         `;
 
         pool.query(
             queryConsultarExisteciaError,
-            [data.codigo_error, data.url_endpoint, data.modulo, data.endpoint, data.metodo],
+            [data.codigo_error, data.url_endpoint, data.modulo, data.endpoint, data.metodo_primario, data.metodo_secundario],
             (error, result) => {
 
                 if(result.length > 0){
@@ -30,13 +32,13 @@ module.exports = {
                     const queryInsertarError = `
                         INSERT 
                             INTO ERRORES_LOG_EJECUCION
-                            (ID_ERROR, CODIGO_ERROR, URL_ENDPOINT, MODULO, ENDPOINT, METODO, DETALLES, MENSAJE_PANTALLA, FECHA_CREACION, HORA_CREACION)
-                        VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURTIME())
+                            (ID_ERROR, CODIGO_ERROR, URL_ENDPOINT, MODULO, ENDPOINT, METODO_PRIMARIO, METODO_SECUNDARIO, DETALLES, MENSAJE_PANTALLA, FECHA_CREACION, HORA_CREACION)
+                        VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), CURTIME())
                     `;
 
                     pool.query(
                         queryInsertarError,
-                        [data.codigo_error, data.url_endpoint, data.modulo, data.endpoint, data.metodo, data.detalles, data.mensaje_pantalla],
+                        [data.codigo_error, data.url_endpoint, data.modulo, data.endpoint, data.metodo_primario, data.metodo_secundario, data.detalles, data.mensaje_pantalla],
                         (error, result) => {
                             if(error){
                                 return callback(`The error type with CODIGO_ERROR: ${data.codigo_error} could not be created`, null, false);
