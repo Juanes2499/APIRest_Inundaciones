@@ -1,7 +1,6 @@
 const {
     crearNodoSensor,
-    consultarNodoSensor,
-    consultarNodoSensorByID,
+    consultarNodoSensorDinamico,
     actualizarNodoSensor,
     eliminarNodoSensor,
 } = require('./nodoSensor.controller');
@@ -9,8 +8,7 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearNodoSensor);
-router.get("/",consultarNodoSensor);
-router.get("/id", consultarNodoSensorByID);
+router.get("/",consultarNodoSensorDinamico);
 router.put("/", actualizarNodoSensor);
 router.delete("/", eliminarNodoSensor);
 

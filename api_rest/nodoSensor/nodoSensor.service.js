@@ -1,6 +1,7 @@
 const pool = require("../../config/database");
 const crypto = require("crypto");
 const base64url = require("base64url");
+const consultaDinamica = require("../../shared/consultaDinamica");
 
 module.exports={
     crear_nodoSensor: (data, callback) => {
@@ -24,30 +25,43 @@ module.exports={
             }
         )
     },
-    consultar_nodoSensor: (callback) => {
+    consultar_nodoSensor_dinamico: (data, callback) => {
+        
+        const queryBaseConsultarNodoSensor = `
+            SELECT 
+                ID_NODO_SENSOR,
+                TOKEN,
+                LATITUD,
+                LONGITUD,
+                DISPOSITIVO_ADQUISICION,
+                ESTADO,
+                FECHA_CREACION,
+                HORA_CREACION,
+                FECHA_ACTUALIZACION,
+                HORA_ACTUALIZACION
+            FROM NODO_SENSOR
+        `;
+
+        const queryConsultarNodoSensorDinamico = consultaDinamica(
+            queryBaseConsultarNodoSensor,
+            data.seleccionar,
+            data.condicion,
+            data.agrupar,
+            data.ordenar
+        );
+
+        if(queryConsultarNodoSensorDinamico.query == null && queryConsultarNodoSensorDinamico.error === true){
+            return callback(queryConsultarNodoSensorDinamico.message, '01NS_02GET_GETPARAMETERS01', null, false);
+        }
+
         pool.query(
-            `SELECT * FROM NODO_SENSOR`,
+            queryConsultarNodoSensorDinamico.query,
             [],
             (error, result) => {
-                if(error){
-                    return callback(error, null, false);
-                }
-                return callback(null, result, true);
-            }
-        )
-    },
-    consultar_nodoSensor_byID: (data, callback) => {
-        pool.query(
-            `
-            SELECT * FROM NODO_SENSOR
-                WHERE ID_NODO_SENSOR = ?`,
-            [data.id_nodo_sensor],
-            (error, result) => {
                 if(result.length === 0){
-                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, null, false);
-                } else if(result.length > 0){
-                    return callback(null, result, true);
+                    return callback(`There is/are no record(s) for sensor node with the parameter(s) set`, '01NS_02GET_GET02', null, false);
                 }
+                return callback(null, null, result, true);
             }
         )
     },
