@@ -28,7 +28,13 @@ module.exports = {
             return error
         }
     },
-    MensajeverificarParametrosJson: (JsonOriginal, JsonComparar) => {
+    MensajeverificarParametrosJson: (JsonOriginal, keysJsonComparar) => {
+
+        let JsonComparar = {};
+            
+        keysJsonComparar.forEach(x => {
+            JsonComparar[x] = true;
+        })
 
         const CopararParametrosFaltantes = compararJson(JsonComparar, JsonOriginal);
             

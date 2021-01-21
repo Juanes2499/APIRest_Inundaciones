@@ -9,23 +9,25 @@ const {
 module.exports = {
     crearNodoSensor: (req, res) => {
         const body = req.body;
-        crear_nodoSensor(body, (err, result, state) => {
+        crear_nodoSensor(body, (err, errorCode, result, state) => {
             if(err){
                 console.log(err);
                 return res.status(500).json({
                     success:state,
                     statusCode:500,
+                    errorInternalCode: errorCode,
                     message: "Database create error - crearNodoSensor"
                 })
             }
             return res.status(201).json({
                 success:state,
-                statusCode:201
+                statusCode:201,
+                message: `The sensor node was succesfully created`,
             })
         })
     },
     consultarNodoSensor: (req, res) => {
-        consultar_nodoSensor((err, result, state) => {
+        consultar_nodoSensor((err,  result, state) => {
             if(err){
                 console.log(err);
                 return res.status(403).json({
@@ -62,12 +64,13 @@ module.exports = {
     },
     actualizarNodoSensor: (req, res) => {
         const body = req.body;
-        actualizar_nodoSensor(body, (err, result, state) => {
+        actualizar_nodoSensor(body, (err, errorCode, result, state) => {
             if(state === false){
                 console.log(err);
                 return res.status(403).json({
                     success: state, 
                     statusCode: 403,
+                    errorInternalCode: errorCode,
                     message: "Database put error - error in actualizarNodoSensor",
                     return: err
                 });
@@ -81,12 +84,13 @@ module.exports = {
     },
     eliminarNodoSensor: (req, res) => {
         const body = req.body;
-        eliminar_nodoSensor(body, (err, result, state) => {
+        eliminar_nodoSensor(body, (err, errorCode, result, state) => {
             if(state === false){
                 console.log(err);
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
+                    errorInternalCode: errorCode,
                     message: "Database delete error - error in eliminarNodoSensor",
                     return: err
                 });

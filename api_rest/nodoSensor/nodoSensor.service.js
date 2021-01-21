@@ -18,9 +18,9 @@ module.exports={
             [token, data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado],
             (error, result) => {
                 if(error){
-                    return callback(error, null, false);
+                    return callback(`The node sensor could not be created`, '01NS_01POST_POST01', null, false);
                 }
-                return callback(null, result, true);
+                return callback(null, null, result, true);
             }
         )
     },
@@ -59,24 +59,25 @@ module.exports={
             [data.id_nodo_sensor],
             (error,result) => {
                 if(result.length === 0){
-                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, null, false);
+                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_03PUT_GET01', null, false);
                 }else if (result.length > 0){
                     pool.query(
                         `
                         UPDATE NODO_SENSOR
                             SET LATITUD = ?,
                                 LONGITUD = ?,
+                                DISPOSITIVO_ADQUISICION = ?,
                                 ESTADO = ?,
                                 FECHA_ACTUALIZACION = CURDATE(),
                                 HORA_ACTUALIZACION = CURTIME() 
                             WHERE ID_NODO_SENSOR = ?`,
-                        [data.latitud, data.longitud, data.estado, data.id_nodo_sensor],
+                        [data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado, data.id_nodo_sensor],
                         (error, result) => {
                             console.log(result);
                             if(error){
-                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, null, false);
+                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, '01NS_03PUT_PUT02', null, false);
                             }
-                            return callback(null, null, true);
+                            return callback(null, null, null, true);
                         }
                     )
                 }
@@ -90,7 +91,7 @@ module.exports={
             [data.id_nodo_sensor],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, null, false);
+                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_04DELETE_GET01', null, false);
                 } else if(result.length > 0){
                     pool.query(
                         `
@@ -99,7 +100,7 @@ module.exports={
                         [data.id_nodo_sensor],
                         (error, result) => {
                             if(error){
-                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be deleted`, null, false);
+                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be deleted`, '01NS_04DELETE_DELETE02', null, false);
                             }
                             return callback(null, null, true)
                         }

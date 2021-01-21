@@ -40,13 +40,9 @@ const consultaDinamica = (queryBase, Select, Where, GroupBy, OrderBy) => {
                 valor_condicion: true
             }
             
-            let whereValuesJsonComparar = {};
+            let ArraywhereValuesJsonComparar = Object.keys(whereValues[i]);
             
-            Object.keys(whereValues[i]).forEach(x => {
-                whereValuesJsonComparar[x] = true;
-            })
-            
-            const verificarParametrosCondiciones = MensajeverificarParametrosJson(whereValuesJsonOriginal, whereValuesJsonComparar)
+            const verificarParametrosCondiciones = MensajeverificarParametrosJson(whereValuesJsonOriginal, ArraywhereValuesJsonComparar)
 
             if(verificarParametrosCondiciones.error === true || verificarParametrosCondiciones.messageFaltantes != null || verificarParametrosCondiciones.messageMalEscritos != null ){
                 return consutaDinamicaReturn = {
