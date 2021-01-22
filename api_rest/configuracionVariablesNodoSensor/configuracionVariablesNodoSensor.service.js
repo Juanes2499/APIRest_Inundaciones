@@ -24,11 +24,11 @@ module.exports = {
                 const variableExist = parseInt(resultToJson.VARIABLE_EXIST);
 
                 if (nodoSensorExist === 0 && variableExist === 0){
-                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} and variable with ID_VARIABLE: ${data.id_variable} were not found`, null, false);
+                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} and variable with ID_VARIABLE: ${data.id_variable} were not found`, '03CVNS_01POST_GET01', null, false);
                 }else if(nodoSensorExist === 0){
-                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, null, false);
+                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, '03CVNS_01POST_GET02', null, false);
                 }else if(variableExist === 0){
-                    return callback(`The variable with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                    return callback(`The variable with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, '03CVNS_01POST_GET03', null, false);
                 }else if(nodoSensorExist > 0 && variableExist > 0){
                     
                     const queryComprobarExistenciaConfiguracion = `
@@ -44,7 +44,7 @@ module.exports = {
                             const existenciaConfiguracionVarJson = JSON.parse(JSON.stringify(result))[0];
 
                             if(result.length > 0){
-                                return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaConfiguracionVarJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist`, null, false);
+                                return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaConfiguracionVarJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist`, '03CVNS_01POST_GET04', null, false);
                             }else if(result.length === 0){
 
                                 const queryCrearConfiguracionVariableNodoSensor = `
@@ -60,9 +60,9 @@ module.exports = {
                                     [data.id_nodo_sensor, data.nombre_variable, data.nombre_variable],
                                     (error, result) => {
                                         if(error){
-                                            return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${data.id_variable} could not be created`, null, false);
+                                            return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${data.id_variable} could not be created`, '03CVNS_01POST_POST05', null, false);
                                         }
-                                        return callback(null, result, true);
+                                        return callback(null, null, result, true);
                                     }
                                 )
                             }
@@ -130,7 +130,7 @@ module.exports = {
         );
 
         if(queryConsultarConfiguracionVariablesNodoSensorDinamico.query == null && queryConsultarConfiguracionVariablesNodoSensorDinamico.error === true){
-            return callback(queryConsultarConfiguracionVariablesNodoSensorDinamico.message, null, false);
+            return callback(queryConsultarConfiguracionVariablesNodoSensorDinamico.message, '03CVNS_02GET_GETPARAMETER01', null, false);
         }
 
         pool.query(
@@ -139,9 +139,9 @@ module.exports = {
             (error, result) => {
                 
                if(result.length === 0){
-                return callback(`There is/are no record(s) for variable configuration with the parameter(s) set`, null, false);
+                return callback(`There is/are no record(s) for variable configuration with the parameter(s) set`, '03CVNS_02GET_GET02', null, false);
                }
-               return callback(null, result, true);
+               return callback(null, null,  result, true);
             }
         )
     },
@@ -157,7 +157,7 @@ module.exports = {
             [data.id_configuracion],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`The register with ID_CONFIGURACION: ${data.id_configuracion} was not found`, null, false);
+                    return callback(`The register with ID_CONFIGURACION: ${data.id_configuracion} was not found`, '03CVNS_04DELETE_GET01', null, false);
                 }else if(result.length > 0){
 
                     const queryEliminarConfiguracionByID = `
@@ -170,9 +170,9 @@ module.exports = {
                         [data.id_configuracion],
                         (error, result) => {
                             if(error){
-                                return callback(`The register with ID_CONFIGURACION: ${data.id_configuracion} could not be deleted`, null, false);
+                                return callback(`The register with ID_CONFIGURACION: ${data.id_configuracion} could not be deleted`, '03CVNS_04DELETE_DELETE02', null, false);
                             }
-                            return callback(null, null, true);
+                            return callback(null, null, null, true);
                         }
                     )
                 }
