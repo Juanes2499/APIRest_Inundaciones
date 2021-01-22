@@ -30,17 +30,17 @@ module.exports = {
             [data.id_nodo_sensor],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, null, false);
+                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, '05DNS_01POST_GET01', null, false);
                 }else if(result.length > 0){
                     
                     const nodoSensorToJson = JSON.parse(JSON.stringify(result))[0];
                     
                     if(data.token != nodoSensorToJson.TOKEN){
-                        return callback(`The token of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is not the same`, null, false);
+                        return callback(`The token of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is not the same`, '05DNS_01POST_GET02', null, false);
                     }
 
                     if(nodoSensorToJson.ESTADO != true){
-                        return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is disabled`, null, false);
+                        return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is disabled`, '05DNS_01POST_GET03', null, false);
                     }
 
                     const queryConsultarVariablesNodoSensor = `
@@ -78,7 +78,7 @@ module.exports = {
 
                             if(variablesErrorArray.length > 0){
                                 const msgVariablesError = `The variable(s): ${variablesErrorArray.toString().replace(",", ", ")} is/are not allowed to POST for the sensor nodo with ID_NODO_SENSOR: ${data.id_nodo_sensor}`;
-                                return callback(msgVariablesError, null, false);
+                                return callback(msgVariablesError, '05DNS_01POST_GET04', null, false);
                             }
 
                             const VariablesInsertar = Object.keys(data.variables);
@@ -90,7 +90,8 @@ module.exports = {
                                 const valorDato = Object.values(data.variables)[i];
 
                                 const validacionReglas = (callback) => {
-                                //Se hace el envio de la notificacion
+
+                                    //Se hace el envio de la notificacion
                                     const queryConsultarRegla = `
                                         SELECT * FROM REGLAS_NODO_SENSOR 
                                         WHERE ID_NODO_SENSOR = ? AND NOMBRE_VARIABLE = ?
@@ -172,7 +173,7 @@ module.exports = {
                                         [idNodoSensor, nombreVariable, nombreVariable, valorDato, res.valorNotificado, res.idRegla, res.expesionEvaluada],
                                         (error, result) => {
                                             if(error){
-                                                return callback(`The data: {${nombreVariable}: ${valorDato}} could not be created for the sensor node with ID_NODO_SENSOR: ${idNodoSensor}`, null, false);
+                                                return callback(`The data: {${nombreVariable}: ${valorDato}} could not be created for the sensor node with ID_NODO_SENSOR: ${idNodoSensor}`, '05DNS_01POST_POST05', null, false);
                                             }
                                         }
                                     )
@@ -213,17 +214,17 @@ module.exports = {
             data.ordenar);
 
         if(queryConsultarDatosNodoSensorDinamico.query == null && queryConsultarDatosNodoSensorDinamico.error === true){
-            return callback(queryConsultarDatosNodoSensorDinamico.message, null, false);
+            return callback(queryConsultarDatosNodoSensorDinamico.message, '05DNS_02GET_GETPARAMETER01', null, false);
         }
 
         pool.query(
             queryConsultarDatosNodoSensorDinamico.query,
             [],
-            (error, result, fields) => {
+            (error, result) => {
                 if(result.length === 0){
-                    return callback(`There is/are no record(s) for data sensor node with the parameter(s) set`, null, false);
+                    return callback(`There is/are no record(s) for data sensor node with the parameter(s) set`, '05DNS_02GET_GET02', null, false);
                 }else if (result.length > 0){
-                    return callback(null, result, true);
+                    return callback(null, null, result, true);
                 }
             }
         )
