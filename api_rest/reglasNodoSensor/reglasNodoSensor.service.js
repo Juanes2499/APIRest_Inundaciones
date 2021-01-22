@@ -224,7 +224,7 @@ module.exports = {
                                                                     return callback(`The register with ID_REGLA: ${data.id_regla} could not be updated`, '04RVNS_03PUT_PUT07', null, false);
                                                                 }
     
-                                                                return callback(null, null, true);
+                                                                return callback(null, null, null, true);
                                                             }
                                                         )
                                                     }
