@@ -24,11 +24,11 @@ module.exports = {
                 const variableExist = parseInt(resultToJson.VARIABLE_EXIST);
 
                 if (nodoSensorExist === 0 && variableExist === 0){
-                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} and variable with ID_VARIABLE: ${data.nombre_variable} were not found`, null, false);
+                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} and variable with ID_VARIABLE: ${data.nombre_variable} were not found`, '04RVNS_01POST_GET01', null, false);
                 }else if(nodoSensorExist === 0){
-                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, null, false);
+                    return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, '04RVNS_01POST_GET02', null, false);
                 }else if(variableExist === 0){
-                    return callback(`The variable with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                    return callback(`The variable with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, '04RVNS_01POST_GET03', null, false);
                 }else if(nodoSensorExist > 0 && variableExist > 0){
                     
                     const queryComprobarExistenciaRegla = `
@@ -44,7 +44,7 @@ module.exports = {
                             const existenciaReglaJson = JSON.parse(JSON.stringify(result))[0];
 
                             if(result.length > 0){
-                                return callback(`The rule configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaReglaJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist`, null, false);
+                                return callback(`The rule configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaReglaJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist`, '04RVNS_01POST_GET04', null, false);
                             }else if (result.length === 0){
 
                                 const queryVerificarConfiguracionVariable = `
@@ -58,7 +58,7 @@ module.exports = {
                                     (error, result) => {
                                         
                                         if(result.length === 0){
-                                            return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and NOMBRE_VARIABLE: ${data.nombre_variable} has not been associated in variable configuration, please set up this configuration`, null, false);
+                                            return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and NOMBRE_VARIABLE: ${data.nombre_variable} has not been associated in variable configuration, please set up this configuration`, '04RVNS_01POST_GET05', null, false);
                                         }else if(result.length > 0){
 
                                             const queryCrearReglaNodoSensor = `
@@ -73,9 +73,9 @@ module.exports = {
                                                 [data.id_nodo_sensor, data.nombre_variable, data.nombre_variable, data.expresion],
                                                 (error, result) => {
                                                     if(error){
-                                                        return callback(`The rule configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaReglaJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be created`, null, false);
+                                                        return callback(`The rule configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaReglaJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be created`, '04RVNS_01POST_POST06', null, false);
                                                     }
-                                                    return callback(null, result, true);
+                                                    return callback(null, null, result, true);
                                                 }
                                             )
                                         }
@@ -114,7 +114,7 @@ module.exports = {
         );
 
         if(queryConsultarReglasNodoSensorDinamico.query == null && queryConsultarReglasNodoSensorDinamico.error === true){
-            return callback(queryConsultarReglasNodoSensorDinamico.message, null, false);
+            return callback(queryConsultarReglasNodoSensorDinamico.message, '04RVNS_02GET_GETPARAMETER01', null, false);
         }
 
         pool.query(
@@ -123,9 +123,9 @@ module.exports = {
             (error, result) => {
 
                 if(result.length === 0){
-                    return callback(`There is/are no record(s) for rule configuration with the parameter(s) set`, null, false);
+                    return callback(`There is/are no record(s) for rule configuration with the parameter(s) set`, '04RVNS_02GET_GET02', null, false);
                 }else if (result.length > 0){
-                    return callback(null, result, true);
+                    return callback(null, null, result, true);
                 }
             }
         )
@@ -143,7 +143,7 @@ module.exports = {
             (error, result) => {
                 
                 if(result.length === 0){
-                    return callback(`The register with ID_REGLA: ${data.id_regla} was not found`, null, false);
+                    return callback(`The register with ID_REGLA: ${data.id_regla} was not found`, '04RVNS_03PUT_GET01', null, false);
                 }else if (result.length > 0){
 
                     data.nombre_variable = data.nombre_variable.toUpperCase();
@@ -166,11 +166,11 @@ module.exports = {
                             const variableExist = parseInt(resultToJson.VARIABLE_EXIST);
 
                             if (nodoSensorExist === 0 && variableExist === 0){
-                                return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} and variable with ID_VARIABLE: ${data.nombre_variable} were not found`, null, false);
+                                return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} and variable with ID_VARIABLE: ${data.nombre_variable} were not found`, '04RVNS_03PUT_GET02', null, false);
                             }else if(nodoSensorExist === 0){
-                                return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, null, false);
+                                return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, '04RVNS_03PUT_GET03', null, false);
                             }else if(variableExist === 0){
-                                return callback(`The variable with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                                return callback(`The variable with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, '04RVNS_03PUT_GET04', null, false);
                             }else if(nodoSensorExist > 0 && variableExist > 0){
 
                                 const queryComprobarExistenciaRegla = `
@@ -186,7 +186,7 @@ module.exports = {
                                         const existenciaReglaJson = JSON.parse(JSON.stringify(result))[0] ? JSON.parse(JSON.stringify(result))[0] : {ID_REGLA: data.id_regla} ;
 
                                         if(existenciaReglaJson.ID_REGLA != data.id_regla){
-                                            return callback(`The rule configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaReglaJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist in the rule configuration with ID_REGLA: ${existenciaReglaJson.ID_REGLA}`, null, false);
+                                            return callback(`The rule configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and ID_VARIABLE: ${existenciaReglaJson.ID_VARIABLE} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist in the rule configuration with ID_REGLA: ${existenciaReglaJson.ID_REGLA}`, '04RVNS_03PUT_GET05', null, false);
                                         }else if (existenciaReglaJson.ID_REGLA === data.id_regla){
 
 
@@ -201,7 +201,7 @@ module.exports = {
                                                 (error, result) => {
 
                                                     if(result.length === 0){
-                                                        return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and NOMBRE_VARIABLE: ${data.nombre_variable} has not been associated in variable configuration, please set up this configuration`, null, false);
+                                                        return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and NOMBRE_VARIABLE: ${data.nombre_variable} has not been associated in variable configuration, please set up this configuration`, '04RVNS_03PUT_GET06', null, false);
                                                     }else if(result.length > 0){
     
                                                         const queryActualizarRegla = `
@@ -221,7 +221,7 @@ module.exports = {
                                                             (error, result) => {
     
                                                                 if(error){
-                                                                    return callback(`The register with ID_REGLA: ${data.id_regla} could not be updated`, null, false);
+                                                                    return callback(`The register with ID_REGLA: ${data.id_regla} could not be updated`, '04RVNS_03PUT_PUT07', null, false);
                                                                 }
     
                                                                 return callback(null, null, true);
@@ -253,7 +253,7 @@ module.exports = {
             (error, result) => {
                 
                 if(result.length === 0){
-                    return callback(`The register with ID_REGLA: ${data.id_regla} was not found`, null, false);
+                    return callback(`The register with ID_REGLA: ${data.id_regla} was not found`, '04RVNS_04DELETE_GET01', null, false);
                 }else if(result.length > 0){
 
                     const queryEliminarReglaNodoSensor = `
@@ -267,9 +267,9 @@ module.exports = {
                         (error, result) => {
 
                             if(error){
-                                return callback(`The register with ID_REGLA: ${data.id_regla} could not be deleted`, null, false);
+                                return callback(`The register with ID_REGLA: ${data.id_regla} could not be deleted`, '04RVNS_04DELETE_DELETE02', null, false);
                             }
-                            return callback(null, null, true);
+                            return callback(null, null, null, true);
                         }
                     )
                 }
