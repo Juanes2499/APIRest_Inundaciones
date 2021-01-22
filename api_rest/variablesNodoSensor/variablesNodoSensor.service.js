@@ -7,7 +7,7 @@ module.exports = {
         const regexNombreVariable = /^[A-Za-z0-9_]+$/; //Expresión regular que el nombre accepte solo estos caracteres
 
         if(regexNombreVariable.test(data.nombre_variable) === false){
-            return callback(`The register with NOMBRE_VARIABLES: ${data.nombre_variable} contains characters not allowed, letters, numbers and underscore are allowed `, null, false);
+            return callback(`The register with NOMBRE_VARIABLES: ${data.nombre_variable} contains characters not allowed, letters, numbers and underscore are allowed `, '02VNS_01POST_DATA01', null, false);
         }
 
         data.nombre_variable = data.nombre_variable.toUpperCase();
@@ -23,16 +23,16 @@ module.exports = {
             [data.nombre_variable],
             (error, result) => {
                 if(result.length > 0){
-                    return callback(`The variable: ${data.nombre_variable} already exist`, null, false);
+                    return callback(`The variable: ${data.nombre_variable} already exist`, '02VNS_01POST_GET01', null, false);
                 }else if(result.length === 0){
                     
                     const rangoMin = Number(data.rango_min);
                     const rangoMax = Number(data.rango_max);
                     
                     if(rangoMin > rangoMax){
-                        return callback(`The minimun rank: ${data.rango_min} is greater than maximun rank: ${data.rango_max}`, null, false);
+                        return callback(`The minimun rank: ${data.rango_min} is greater than maximun rank: ${data.rango_max}`, '02VNS_01POST_DATA02', null, false);
                     }else if(rangoMin === rangoMax){
-                        return callback(`The minimun rank: ${data.rango_min} is the samse as maximun rank: ${data.rango_max}`, null, false);
+                        return callback(`The minimun rank: ${data.rango_min} is the samse as maximun rank: ${data.rango_max}`, '02VNS_01POST_DATA03', null, false);
                     }
                     
                     const queryCrearVariable = `
@@ -48,9 +48,9 @@ module.exports = {
                         [data.nombre_variable, data.detalles, data.tipo_dato, data.unidad_medida, data.rango_min, data.rango_max, data.estado],
                         (error, result) => {
                             if(error){
-                                return callback(`The variable: ${data.nombre_variable} could not be created`, null, false);
+                                return callback(`The variable: ${data.nombre_variable} could not be created`, '02VNS_01POST_POST04', null, false);
                             }
-                            return callback(null, result, true);
+                            return callback(null, null, result, true);
                         }
                     )
                 }
@@ -85,7 +85,7 @@ module.exports = {
         );
 
         if(queryConsultarVariablesNodoSensorDinamico.query == null && queryConsultarVariablesNodoSensorDinamico.error === true){
-            return callback(queryConsultarVariablesNodoSensorDinamico.message, null, false);
+            return callback(queryConsultarVariablesNodoSensorDinamico.message, '02VNS_02GET_GETparameter01', null, false);
         }
 
         pool.query(
@@ -93,9 +93,9 @@ module.exports = {
             [],
             (error, result) => {
                 if(result.length === 0){
-                    return callback(`There is/are no record(s) for variables sensor node with the parameter(s) set`, null, false);
+                    return callback(`There is/are no record(s) for variables sensor node with the parameter(s) set`, '02VNS_02GET_GET02', null, false);
                 }
-                return callback(null, result, true);
+                return callback(null, null, result, true);
             }
         )
     },
@@ -104,7 +104,7 @@ module.exports = {
         const regexNombreVariable = /^[A-Za-z0-9_]+$/; //Expresión regular que el nombre accepte solo estos caracteres
 
         if(regexNombreVariable.test(data.nombre_variable) === false){
-            return callback(`The register with NOMBRE_VARIABLES: ${data.nombre_variable} contains characters not allowed, letters, numbers and underscore are allowed `, null, false);
+            return callback(`The register with NOMBRE_VARIABLES: ${data.nombre_variable} contains characters not allowed, letters, numbers and underscore are allowed `, '02VNS_03PUT_DATA01', null, false);
         }
 
         data.nombre_variable = data.nombre_variable.toUpperCase();
@@ -122,7 +122,7 @@ module.exports = {
 
                 if(result.length === 0){
                     
-                    return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, null, false);
+                    return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, '02VNS_03PUT_GET02', null, false);
 
                 }else if(result.length > 0){
 
@@ -130,9 +130,9 @@ module.exports = {
                     const rangoMax = Number(data.rango_max);
                     
                     if(rangoMin > rangoMax){
-                        return callback(`The minimun rank: ${data.rango_min} is greater than maximun rank: ${data.rango_max}`, null, false);
+                        return callback(`The minimun rank: ${data.rango_min} is greater than maximun rank: ${data.rango_max}`, '02VNS_03PUT_DATA03', null, false);
                     }else if(rangoMin === rangoMax){
-                        return callback(`The minimun rank: ${data.rango_min} is the samse as maximun rank: ${data.rango_max}`, null, false);
+                        return callback(`The minimun rank: ${data.rango_min} is the samse as maximun rank: ${data.rango_max}`, '02VNS_03PUT_DATA04', null, false);
                     }
 
                     const queryComprobarExistenciaVariablesAntesActualizar = `
@@ -148,7 +148,7 @@ module.exports = {
                             const existenciaVariableJson = JSON.parse(JSON.stringify(result))[0] ? JSON.parse(JSON.stringify(result))[0] : {ID_VARIABLE: data.id_variable} ;
 
                             if(existenciaVariableJson.ID_VARIABLE != data.id_variable){
-                                return callback(`The variable with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist in the variable register with NOMBRE_VARIABLE: ${existenciaVariableJson.ID_VARIABLE}`, null, false);
+                                return callback(`The variable with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} already exist in the variable register with NOMBRE_VARIABLE: ${existenciaVariableJson.ID_VARIABLE}`, '02VNS_03PUT_GET05', null, false);
                             }else if(existenciaVariableJson.ID_VARIABLE === data.id_variable){
 
                                 const queryActualizarVariableByID = `
@@ -170,9 +170,9 @@ module.exports = {
                                     [data.nombre_variable, data.detalles, data.tipo_dato, data.unidad_medida, data.rango_min, data.rango_max, data.estado, data.id_variable, data.nombre_variable],
                                     (error, result) => {
                                         if(error){
-                                            return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be updated`, null, false);
+                                            return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be updated`, '02VNS_03PUT_PUT06', null, false);
                                         }
-                                        return callback(null, null, true);
+                                        return callback(null, null, null, true);
                                     }
                                 )
                             }
@@ -199,11 +199,11 @@ module.exports = {
             (error, result) => {
                 if(result.length === 0){
                     if(data.id_variable && data.nombre_variable){
-                        return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                        return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, '02VNS_04DELETE_GET01', null, false);
                     }else if(data.id_variable){
-                        return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, null, false);
+                        return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, '02VNS_04DELETE_GET02', null, false);
                     }else if(data.nombre_variable){
-                        return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, null, false);
+                        return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, '02VNS_04DELETE_GET03', null, false);
                     }
                 }else if(result.length > 0){
 
@@ -218,14 +218,14 @@ module.exports = {
                         (error, result) => {
                             if(error){
                                 if(data.id_variable && data.nombre_variable){
-                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, null, false);
+                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, '02VNS_04delete_DELETE04', null, false);
                                 }else if(data.id_variable){
-                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be deleted`, null, false);
+                                    return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be deleted`, '02VNS_04DELETE_DELETE05', null, false);
                                 }else if(data.nombre_variable){
-                                    return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, null, false);
+                                    return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, '02VNS_04DELETE_DELETE06', null, false);
                                 }
                             }
-                            return callback(null, null, true);
+                            return callback(null, null, null, true);
                         }
                     )
                 }
