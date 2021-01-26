@@ -179,7 +179,7 @@ module.exports = {
                                     )
                                 })
                             }
-                            return callback(null, result, true);
+                            return callback(null, null, result, true);
                         }
                     )
                 }

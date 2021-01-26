@@ -47,6 +47,7 @@ module.exports = {
                         queryCrearVariable,
                         [data.nombre_variable, data.detalles, data.tipo_dato, data.unidad_medida, data.rango_min, data.rango_max, data.estado],
                         (error, result) => {
+
                             if(error){
                                 return callback(`The variable: ${data.nombre_variable} could not be created`, '02VNS_01POST_POST04', null, false);
                             }
