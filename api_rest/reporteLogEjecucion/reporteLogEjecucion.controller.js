@@ -3,7 +3,7 @@ const {
     consultar_ReporteLogEjecucion_dinamico
 } = require('./reporteLogEjecucion.service');
 
-const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEjecucion.controller');
+//const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEjecucion.controller');
 
 const {MensajeverificarParametrosJson} = require("../../shared/verificarParametrosJson");
 

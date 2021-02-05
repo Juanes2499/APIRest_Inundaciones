@@ -1,4 +1,4 @@
-const reporteLogEjecucion = require('./reporteLogEjecucion.authentication');
+const reporteLogEjecucion = require('./reporteLogEjecucion.router');
 
 const express = require('express');
 const reporteLogEjecucionAuth = express();

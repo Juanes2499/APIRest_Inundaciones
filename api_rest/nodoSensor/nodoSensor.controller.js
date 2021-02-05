@@ -27,11 +27,18 @@ module.exports = {
 
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
+            const errorData = {
+                codigo_error: '01NS_01POST_PARAMETERS00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+
+            crearReporteLogEjecucion(errorData)
+
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
-                errorInternalCode: '01NS_01POST_PARAMETERS00',
-                message: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
             })
         }
 
@@ -77,11 +84,19 @@ module.exports = {
 
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
+            const errorData = {
+                codigo_error: '01NS_02GET_PARAMETERS00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+
+            crearReporteLogEjecucion(errorData)
+
+
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
-                errorInternalCode: '01NS_02GET_PARAMETERS00',
-                message: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
             })
         }
 
@@ -130,17 +145,33 @@ module.exports = {
 
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
+            const errorData = {
+                codigo_error: '01NS_03PUT_PARAMETERS00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+
+            crearReporteLogEjecucion(errorData)
+
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
-                errorInternalCode: '01NS_03PUT_PARAMETERS00',
-                message: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
             })
         }
 
         actualizar_nodoSensor(body, (err, errorCode, result, state) => {
             if(state === false){
+
                 console.log(err);
+
+                const errorData = {
+                    codigo_error: errorCode,
+                    mensaje_retornado: err
+                }
+
+                crearReporteLogEjecucion(errorData)
+
                 return res.status(403).json({
                     success: state, 
                     statusCode: 403,
@@ -170,17 +201,33 @@ module.exports = {
 
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
+            const errorData = {
+                codigo_error: '01NS_04DELETE_PARAMETERS00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+
+            crearReporteLogEjecucion(errorData)
+
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
-                errorInternalCode: '01NS_04DELETE_PARAMETERS00',
-                message: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
             })
         }
 
         eliminar_nodoSensor(body, (err, errorCode, result, state) => {
             if(state === false){
+
                 console.log(err);
+
+                const errorData = {
+                    codigo_error: errorCode,
+                    mensaje_retornado: err
+                }
+
+                crearReporteLogEjecucion(errorData)
+
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
