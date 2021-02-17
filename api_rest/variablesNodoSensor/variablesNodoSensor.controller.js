@@ -1,23 +1,28 @@
 const {
-    crear_nodoSensor,
-    consultar_nodoSensor_dinamico,
-    actualizar_nodoSensor,
-    eliminar_nodoSensor,
-} = require('./nodoSensor.service');
+    crear_variables_nodoSensor,
+    consultar_variablesNodoSensor_dinamico,
+    actualizar_variable_ByID,
+    eliminar_variable_ByID_ByNombreVariable,
+} = require('./variablesNodoSensor.service');
 
 const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEjecucion.controller');
 
 const {MensajeverificarParametrosJson} = require("../../shared/verificarParametrosJson");
 
+
 module.exports = {
-    crearNodoSensor: (req, res) => {
+    crearVariablesNodoSensor: (req, res) => {
         
         const body = req.body;
 
+        //Se verifica si la peticion tiene los parámetros necesarios
         const parametrosEndpoint = {
-            latitud: true,
-            longitud: true,
-            dispositivo_adquisicion: true,
+            nombre_variable: true,
+            detalles: true,
+            tipo_dato: true,
+            unidad_medida: true,  
+            rango_min: true,
+            rango_max: true,
             estado: true,   
         };
         
@@ -28,7 +33,7 @@ module.exports = {
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
             const errorData = {
-                codigo_error: '01NS_01POST_PARAMETERS00',
+                codigo_error: '02VNS_01POST_PARAMETER00',
                 mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
             }
 
@@ -42,10 +47,11 @@ module.exports = {
             })
         }
 
-        crear_nodoSensor(body, (err, errorCode, result, state) => {
-            if(err){
+        //Se llama al serivcio para crear la variable
+        crear_variables_nodoSensor(body, (err, errorCode, result, state) => {
+            if(state === false){
                 console.log(err);
-                
+
                 const errorData = {
                     codigo_error: errorCode,
                     mensaje_retornado: err
@@ -57,25 +63,27 @@ module.exports = {
                     success:state,
                     statusCode:500,
                     errorInternalCode: errorCode,
-                    message: "Database create error - crearNodoSensor"
+                    message: "Database create error - error in crearVariablesNodoSensor",
+                    return: err
                 })
             }
             return res.status(201).json({
                 success:state,
                 statusCode:201,
-                message: `The sensor node was succesfully created`,
+                message: `The varible: ${body.nombre_variable} was successfully created`
             })
         })
     },
-    consultarNodoSensorDinamico: (req, res) => {
+    consultarVariablesNodoSensorDinamico: (req, res) => {
 
         const body = req.body;
 
+        //Se verifica si la peticion tiene los parámetros necesarios
         const parametrosEndpoint = {
             seleccionar: true,
             condicion: true,
             agrupar: true,
-            ordenar: true,   
+            ordenar: true,
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);
@@ -85,12 +93,11 @@ module.exports = {
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
             const errorData = {
-                codigo_error: '01NS_02GET_PARAMETERS00',
+                codigo_error: '02VNS_02GET_PARAMETER00',
                 mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
-
 
             return res.status(500).json({
                 success: false,
@@ -100,8 +107,10 @@ module.exports = {
             })
         }
 
-        consultar_nodoSensor_dinamico(body, (err, errorCode, result, state) => {
+        //Se llama al servicio para la consulta dinámica
+        consultar_variablesNodoSensor_dinamico(body, (err, errorCode, result, state) => {
             if(state === false){
+                
                 console.log(err);
 
                 const errorData = {
@@ -109,17 +118,16 @@ module.exports = {
                     mensaje_retornado: err
                 }
 
-                crearReporteLogEjecucion(errorData);
+                crearReporteLogEjecucion(errorData)
 
                 return res.status(403).json({
                     success:state,
                     statusCode:403,
                     errorInternalCode: errorCode,
-                    message: "Database get error - error in consultarNodoSensorDinamico",
+                    message: "Database get error - error in consultarVariablesNodoSensor",
                     return: err
                 })
             }
-
             return res.status(200).json({
                 success: state,
                 statusCode: 200,
@@ -127,16 +135,20 @@ module.exports = {
             })
         })
     },
-    actualizarNodoSensor: (req, res) => {
-        
+    actualizarVariableByID: (req, res) => {
+
         const body = req.body;
 
+        //Se verifica si la peticion tiene los parámetros necesarios
         const parametrosEndpoint = {
-            id_nodo_sensor: true,
-            latitud: true,
-            longitud: true,
-            dispositivo_adquisicion: true,   
-            estado: true,   
+            id_variable: true,
+            nombre_variable: true,
+            detalles: true,
+            tipo_dato: true,
+            unidad_medida: true,  
+            rango_min: true,
+            rango_max: true,
+            estado: true,  
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);
@@ -146,7 +158,7 @@ module.exports = {
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
             const errorData = {
-                codigo_error: '01NS_03PUT_PARAMETERS00',
+                codigo_error: '02VNS_03PUT_PARAMETER00',
                 mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
             }
 
@@ -160,7 +172,67 @@ module.exports = {
             })
         }
 
-        actualizar_nodoSensor(body, (err, errorCode, result, state) => {
+        //Se llama al servicio para actualizar la variable 
+        actualizar_variable_ByID(body, (err, errorCode, result, state) => {
+            if(state === false){
+
+                console.log(err);
+
+                const errorData = {
+                    codigo_error: errorCode,
+                    mensaje_retornado: err
+                }
+
+                crearReporteLogEjecucion(errorData)
+                
+                return res.status(403).json({
+                    success: state, 
+                    statusCode: 403,
+                    errorInternalCode: errorCode,
+                    message: "Database put error - error in actualizarVariableByID",
+                    return: err
+                });
+            }     
+            return res.status(200).json({
+                success: state,
+                statusCode:200,
+                message: `The variable with ID_VARIABLE: ${body.id_variable} was successfully updated`
+            });                
+        })
+    },
+    eliminarVariableByIDByNombreVariable: (req, res) => {
+        
+        const body = req.body;
+
+        //Se verifica si la peticion tiene los parámetros necesarios
+        const parametrosEndpoint = {
+            id_variable: true,
+            nombre_variable: true,
+        };
+        
+        const arrayParametrosJsonComparar = Object.keys(body);
+        
+        const verificarParametro = MensajeverificarParametrosJson(parametrosEndpoint, arrayParametrosJsonComparar)
+
+        if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
+            
+            const errorData = {
+                codigo_error: '02VNS_04DELETE_PARAMETER00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+
+            crearReporteLogEjecucion(errorData)
+
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
+            })
+        }
+
+        //Se llama al servicio para eliminar la variable
+        eliminar_variable_ByID_ByNombreVariable(body, (err, errorCode,  result, state) => {
             if(state === false){
 
                 console.log(err);
@@ -176,72 +248,30 @@ module.exports = {
                     success: state, 
                     statusCode: 403,
                     errorInternalCode: errorCode,
-                    message: "Database put error - error in actualizarNodoSensor",
+                    message: "Database delete error - error in eliminarVariableByIDByNombreVariable",
                     return: err
                 });
             }
-            return res.status(200).json({
-                success: state,
-                statusCode:200,
-                message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully updated`
-            });
-        })
-    },
-    eliminarNodoSensor: (req, res) => {
-        
-        const body = req.body;
 
-        const parametrosEndpoint = {
-            id_nodo_sensor: true,
-        };
-        
-        const arrayParametrosJsonComparar = Object.keys(body);
-        
-        const verificarParametro = MensajeverificarParametrosJson(parametrosEndpoint, arrayParametrosJsonComparar)
-
-        if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
-            
-            const errorData = {
-                codigo_error: '01NS_04DELETE_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
-            }
-
-            crearReporteLogEjecucion(errorData)
-
-            return res.status(500).json({
-                success: false,
-                statusCode: 500,
-                errorInternalCode: errorData.codigo_error,
-                message: errorData.mensaje_retornado
-            })
-        }
-
-        eliminar_nodoSensor(body, (err, errorCode, result, state) => {
-            if(state === false){
-
-                console.log(err);
-
-                const errorData = {
-                    codigo_error: errorCode,
-                    mensaje_retornado: err
-                }
-
-                crearReporteLogEjecucion(errorData)
-
-                return res.status(403).json({
-                    success:state,
-                    statusCode:403,
-                    errorInternalCode: errorCode,
-                    message: "Database delete error - error in eliminarNodoSensor",
-                    return: err
+            if(body.id_variable && body.nombre_variable){
+                return res.status(200).json({
+                    success: state,
+                    statusCode:200,
+                    message: `The variable with ID_VARIABLE: ${body.id_variable} and NOMBRE_VARIABLE: ${body.nombre_variable} was successfully deleted`
+                });
+            }else if(body.id_variable){
+                return res.status(200).json({
+                    success: state,
+                    statusCode:200,
+                    message: `The variable with ID_VARIABLE: ${body.id_variable} was successfully deleted`
+                });                
+            }else if(body.nombre_variable){
+                return res.status(200).json({
+                    success: state,
+                    statusCode:200,
+                    message: `The variable with NOMBRE_VARIABLE: ${body.nombre_variable} was successfully deleted`
                 });
             }
-            return res.status(200).json({
-                success: state,
-                statusCode: 200,
-                message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully deleted`
-            })
         })
     }
-
 }
