@@ -207,7 +207,6 @@ module.exports = {
         //Se verifica si la peticion tiene los parámetros necesarios
         const parametrosEndpoint = {
             id_variable: true,
-            nombre_variable: true,
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);

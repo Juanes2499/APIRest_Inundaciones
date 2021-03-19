@@ -7,7 +7,7 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearConfiguracioVariableNodoSensor);
-router.get("/", consultarConfiguracionesVariablesNodoSensorDinamico);
-router.delete("/", eliminarConfiguracionVariablesNodoSensorByIDConfiguracion)
+router.post("/get", consultarConfiguracionesVariablesNodoSensorDinamico);
+router.post("/delete", eliminarConfiguracionVariablesNodoSensorByIDConfiguracion)
 
 module.exports = router;

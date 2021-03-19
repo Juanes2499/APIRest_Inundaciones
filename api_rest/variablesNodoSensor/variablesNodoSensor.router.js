@@ -9,8 +9,8 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearVariablesNodoSensor);
-router.get("/", consultarVariablesNodoSensorDinamico);
+router.post("/get", consultarVariablesNodoSensorDinamico);
 router.put("/", actualizarVariableByID);
-router.delete("/", eliminarVariableByIDByNombreVariable)
+router.post("/delete", eliminarVariableByIDByNombreVariable)
 
 module.exports = router;

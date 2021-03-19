@@ -17,14 +17,17 @@ variablesNodoSensorAuth.use("/", (req, res) => {
                 })
                 return req;
             }else{
-                const rolMaster = req.decoded.ROL_MASTER;
-                const rolAdministrador = req.decoded.ROL_ADMINISTRADOR;
-                const rolVariablesNodoSensor = req.decoded.ROL_VARIABLES_NODO_SENSOR;
-    
-                if(rolMaster || rolAdministrador || rolVariablesNodoSensor){
-                    variablesNodoSensorRouter(req,res);
+                let moduloPermiso  = false;
+
+                try{
+                    moduloPermiso =  req.decoded.PERMISOS.MS_SENSORES_NS.MOD_VARIABLES_NODO_SENSOR;
+                }catch{
+                    moduloPermiso  = false;
                 }
-                else{
+
+                if(moduloPermiso){
+                    variablesNodoSensorRouter(req,res);
+                }else{
                     return res.status(500).json({
                         success:false,
                         statusCode:500,

@@ -8,8 +8,8 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearNodoSensor);
-router.get("/",consultarNodoSensorDinamico);
+router.post("/get",consultarNodoSensorDinamico);
 router.put("/", actualizarNodoSensor);
-router.delete("/", eliminarNodoSensor);
+router.post("/delete", eliminarNodoSensor);
 
 module.exports = router;

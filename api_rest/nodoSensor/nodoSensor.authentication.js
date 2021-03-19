@@ -17,13 +17,19 @@ nodeSensorAuth.use("/", (req, res)=>{
                 })
                 return req;
             }else{
-                const rolMaster = req.decoded.ROL_MASTER;
-                const rolAdministrador = req.decoded.ROL_ADMINISTRADOR;
-                const rolNodoSensor = req.decoded.ROL_NODO_SENSOR;
-    
-                if(rolMaster || rolAdministrador || rolNodoSensor){
+
+                let moduloPermiso  = false;
+
+                try{
+                    moduloPermiso =  req.decoded.PERMISOS.MS_SENSORES_NS.MOD_NODO_SENSORES;
+                }catch{
+                    moduloPermiso  = false;
+                }
+
+                if(moduloPermiso){
                     nodoSensorRouter(req,res);
                 }
+
                 else{
                     return res.status(500).json({
                         success:false,
