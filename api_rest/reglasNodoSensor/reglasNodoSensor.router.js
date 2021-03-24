@@ -8,8 +8,8 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearReglaNodoSensor);
-router.get("/", consultarReglasNodoSensorDinamico);
+router.post("/get", consultarReglasNodoSensorDinamico);
 router.put("/", actualizarReglaNodoSensorById);
-router.delete("/",eliminarReglaNodoSensorById);
+router.post("/delete",eliminarReglaNodoSensorById);
 
 module.exports = router;
