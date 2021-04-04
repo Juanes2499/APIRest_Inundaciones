@@ -3,6 +3,7 @@ const {
     consultar_nodoSensor_dinamico,
     actualizar_nodoSensor,
     eliminar_nodoSensor,
+    test,
 } = require('./nodoSensor.service');
 
 const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEjecucion.controller');
@@ -10,6 +11,68 @@ const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEje
 const {MensajeverificarParametrosJson} = require("../../shared/verificarParametrosJson");
 
 module.exports = {
+
+    testt: (req, res) => {
+        
+        const token = req.headers.authorization.replace('Bearer ', '');
+
+        const body = req.body;
+
+        const parametrosEndpoint = {
+            microservicio_interes: true,
+            modulo_interes: true,
+            seleccionar: true,
+            condicion: true,
+            agrupar: true,
+            ordenar: true,  
+        };
+        
+        const arrayParametrosJsonComparar = Object.keys(body);
+        
+        const verificarParametro = MensajeverificarParametrosJson(parametrosEndpoint, arrayParametrosJsonComparar)
+
+        if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
+            
+            const errorData = {
+                codigo_error: '01NS_01POST_PARAMETERS00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+
+            crearReporteLogEjecucion(errorData)
+
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
+            })
+        }
+
+        test(body, token, (err, errorCode, result, state) => {
+            if(err){
+                console.log(err);
+                
+                const errorData = {
+                    codigo_error: errorCode,
+                    mensaje_retornado: err
+                }
+
+                crearReporteLogEjecucion(errorData)
+
+                return res.status(500).json({
+                    success:state,
+                    statusCode:500,
+                    errorInternalCode: errorCode,
+                    message: "Database create error - crearNodoSensor"
+                })
+            }
+            return res.status(201).json({
+                success:state,
+                statusCode:201,
+                message: `The sensor node was succesfully created`,
+            })
+        })
+    },
     crearNodoSensor: (req, res) => {
         
         const body = req.body;

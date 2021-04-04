@@ -1,9 +1,43 @@
+const createAxiosInstanceAuth = require("../../shared/createAxiosInstanceAuth");
 const pool = require("../../config/database");
 const crypto = require("crypto");
 const base64url = require("base64url");
 const consultaDinamica = require("../../shared/consultaDinamica");
+const axios = require("axios");
+var Request = require("request");
+
+
+const getData = (json, token) => {
+    return axios.post("localhost:3020/api/dipositivos/get", json, {headers: { 'Authorization': `Bearer ${token}`}})
+}
 
 module.exports={
+    test: (data, token, callback) => {
+
+        console.log(data)
+
+        // Request.post("http://127.0.0.1:3020/api/dispositivos/get",  (error, response, body) => {
+        //     if(error) {
+        //         //return console.dir(error);
+        //         console.log(error)
+        //     }
+        //     console.log(response)
+        //     console.log(response.body)
+        //     //console.dir(JSON.parse(body));
+        // });
+
+        Request.post({
+            "headers": { 'Authorization': `Bearer ${token}` },
+            "url": "http://127.0.0.1:3020/api/dispositivos/get",
+            "json": data
+        }, (error, response, body) => {
+            if(error) {
+                console.log(error)
+            }
+            console.log(response)
+            console.log(response.body)
+        });
+    },
     crear_nodoSensor: (data, callback) => {
 
         const token = base64url(crypto.randomBytes(200));
