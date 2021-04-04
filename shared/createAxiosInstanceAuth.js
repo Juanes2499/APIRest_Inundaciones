@@ -1,15 +1,18 @@
-const axios = require('axios');
+var Request = require("request");
 
-const createAxiosInstanceAuth = (token, config) => {
-    let API_AUTH = process.env.HOST_AUTH;
-    let minConfig = {
-        baseURL: API_AUTH,
-        headers: { 'Authorization': `Bearer ${token}`}
+module.exports = {
+    post: (headers, urlRelative, json, callback) => {
+        Request.post({
+            "headers": headers,
+            "url": `http://${process.env.HOST_AUTH}${urlRelative}`,
+            "json": json
+        }, (error, response, body) => {
+            
+            if(error) {
+                return callback(error, null, false);
+            }else{
+                return callback(null, response.body, true);
+            }
+        });
     }
-    if (config) {
-        minConfig = { ...minConfig, ...config }
-    }
-    return axios.create(minConfig)
-}
-
-module.exports = createAxiosInstanceAuth;
+};
