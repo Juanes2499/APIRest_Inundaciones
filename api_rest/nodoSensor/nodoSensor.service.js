@@ -1,18 +1,10 @@
-const createAxiosInstanceAuth = require("../../shared/createAxiosInstanceAuth");
+
 const pool = require("../../config/database");
-const crypto = require("crypto");
-const base64url = require("base64url");
 const consultaDinamica = require("../../shared/consultaDinamica");
-const axios = require("axios");
 const CreatorUUID = require('uuid');
 var Request = require("request");
 const { sign } = require("jsonwebtoken");
-
-
-
-const getData = (json, token) => {
-    return axios.post("localhost:3020/api/dipositivos/get", json, {headers: { 'Authorization': `Bearer ${token}`}})
-}
+const {validarExistenciaDispositivoAutenticacion} = require('../../shared/helper');
 
 module.exports={
     test: (data, token, callback) => {
@@ -42,10 +34,8 @@ module.exports={
         });     
     },
     crear_nodoSensor: (data, token, callback) => {
-        
-        
+    
         data.email_responsable = data.email_responsable.toLowerCase();
-        
         
         const DateTime = new Date();
         const date = `${DateTime.getFullYear()}-${(DateTime.getMonth()+1)}-${DateTime.getDate()}`
@@ -173,38 +163,100 @@ module.exports={
             }
         )
     },
-    actualizar_nodoSensor: (data, callback) => {
-        pool.query(
-            `
-            SELECT * FROM NODO_SENSOR
-                WHERE ID_NODO_SENSOR = ?`,
-            [data.id_nodo_sensor],
-            (error,result) => {
-                if(result.length === 0){
-                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_03PUT_GET01', null, false);
-                }else if (result.length > 0){
-                    pool.query(
-                        `
-                        UPDATE NODO_SENSOR
-                            SET LATITUD = ?,
-                                LONGITUD = ?,
-                                DISPOSITIVO_ADQUISICION = ?,
-                                ESTADO = ?,
-                                FECHA_ACTUALIZACION = CURDATE(),
-                                HORA_ACTUALIZACION = CURTIME() 
-                            WHERE ID_NODO_SENSOR = ?`,
-                        [data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado, data.id_nodo_sensor],
-                        (error, result) => {
-                            console.log(result);
-                            if(error){
-                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, '01NS_03PUT_PUT02', null, false);
-                            }
-                            return callback(null, null, null, true);
-                        }
-                    )
+    actualizar_nodoSensor: (data, token, callback) => {
+
+        const dataConsulta = {
+            microservicio_interes: process.env.MICROSERVICIO_INTERES,
+            modulo_interes: process.env.MODULOS_INTERES,
+            seleccionar:"ID_DISPOSITIVO",
+            condicion:{
+                ID_VARIABLE: {
+                    conector_logico:"",
+                    operador: "=",
+                    valor_condicion: data.id_nodo_sensor
                 }
+            },
+            agrupar:"",
+            ordenar:""
+        } 
+
+        validarExistenciaDispositivoAutenticacion(dataConsulta, token, (err, state) => {
+            if(state === true){
+
+                const queryConsultarNodoSensor =  `
+                    SELECT * FROM NODO_SENSOR
+                        WHERE ID_NODO_SENSOR = ?
+                `;
+
+                pool.query(
+                    queryConsultarNodoSensor,
+                    [data.id_nodo_sensor],
+                    (error,result) => {
+
+                        if (error){
+                            return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                        }
+
+                        if(result.length === 0){
+                            return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_03PUT_GET01', null, false);
+                        }else if (result.length > 0){
+
+                            data.email_responsable = data.email_responsable.toLowerCase();
+        
+                            const DateTime = new Date();
+                            const date = `${DateTime.getFullYear()}-${(DateTime.getMonth()+1)}-${DateTime.getDate()}`
+                            const time = `${DateTime.getHours()}:${DateTime.getMinutes()}:${DateTime.getSeconds()}`;
+
+                            data.microservicio_interes = process.env.MICROSERVICIO_INTERES;
+                            data.modulo_interes = process.env.MODULOS_INTERES;
+                            data.nombre_microservicio = process.env.MICROSERVICIO_INTERES;
+                            data.fecha_actualizacion = date;
+                            data.hora_actualizacion = time;      
+
+                            Request.put({
+                                "headers": { 'Authorization': `Bearer ${token}` },
+                                "url": `http://${process.env.HOST_AUTH}/api/dispositivos`,
+                                "json": data
+                            }, (error, response, body) => {
+                    
+                                if(error) {
+                                    return callback(`The update of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} could not be done in the Core platform`, '01NS_03PUT_GET01', null, false);
+                                }else if(response.body.success === true){
+
+                                    const queryActulizarNodoSensor = `
+                                        UPDATE NODO_SENSOR
+                                            SET 
+                                                MARCA = ?,
+                                                REFERENCIA = ?,
+                                                LATITUD = ?,
+                                                LONGITUD = ?,
+                                                EMAIL_RESPONSABLE = ?,
+                                                DISPOSITIVO_ACTIVO = ?,
+                                                FECHA_ACTUALIZACION = ?,
+                                                HORA_ACTUALIZACION = ?
+                                        WHERE ID_NODO_SENSOR = ?
+                                    `;
+
+                                    pool.query(
+                                        queryActulizarNodoSensor,
+                                        [data.marca, data.referencia, data.latitud, data.longitud, data.email_responsable, data.dispositivo_activo, date, time, data.id_nodo_sensor],
+                                        (error, result) => {
+                                            console.log(result);
+                                            if(error){
+                                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, '01NS_03PUT_PUT02', null, false);
+                                            }
+                                            return callback(null, null, null, true);
+                                        }
+                                    )
+                                }
+                            })
+                        }
+                    }
+                )
+            }else{
+                return callback(err, '01NS_03PUT_GET01', null, false);
             }
-        )
+        })
     },
     eliminar_nodoSensor: (data, callback) => {
         pool.query(

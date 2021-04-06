@@ -196,6 +196,7 @@ module.exports = {
     actualizarNodoSensor: (req, res) => {
         
         const body = req.body;
+        const token = req.headers.authorization.replace('Bearer ', '');
 
         const parametrosEndpoint = {
             id_nodo_sensor: true,
@@ -226,7 +227,7 @@ module.exports = {
             })
         }
 
-        actualizar_nodoSensor(body, (err, errorCode, result, state) => {
+        actualizar_nodoSensor(body, token, (err, errorCode, result, state) => {
             if(state === false){
 
                 console.log(err);
