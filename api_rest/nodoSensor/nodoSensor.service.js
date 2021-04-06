@@ -4,7 +4,10 @@ const crypto = require("crypto");
 const base64url = require("base64url");
 const consultaDinamica = require("../../shared/consultaDinamica");
 const axios = require("axios");
+const CreatorUUID = require('uuid');
 var Request = require("request");
+const { sign } = require("jsonwebtoken");
+
 
 
 const getData = (json, token) => {
@@ -36,28 +39,97 @@ module.exports={
             }
             console.log(response)
             console.log(response.body)
-        });
+        });     
     },
-    crear_nodoSensor: (data, callback) => {
+    crear_nodoSensor: (data, token, callback) => {
+        
+        
+        data.email_responsable = data.email_responsable.toLowerCase();
+        
+        
+        const DateTime = new Date();
+        const date = `${DateTime.getFullYear()}-${(DateTime.getMonth()+1)}-${DateTime.getDate()}`
+        const time = `${DateTime.getHours()}:${DateTime.getMinutes()}:${DateTime.getSeconds()}`;
 
-        const token = base64url(crypto.randomBytes(200));
+        const uuid = CreatorUUID.v4();
 
-        pool.query(
-            `
-            INSERT 
-                INTO NODO_SENSOR 
-                (ID_NODO_SENSOR, TOKEN, LATITUD, LONGITUD, DISPOSITIVO_ADQUISICION, ESTADO, FECHA_CREACION, HORA_CREACION)
-            VALUES 
-                (UUID(), ?, ?, ?, ?, ?, CURDATE(), CURTIME())
-            `,
-            [token, data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado],
-            (error, result) => {
-                if(error){
-                    return callback(`The node sensor could not be created`, '01NS_01POST_POST01', null, false);
-                }
-                return callback(null, null, result, true);
+        const keyDevices = process.env.TOKEN_KEY_DEVICES.toString();
+        const expiresInDispositivo = parseInt(process.env.TOKEN_EXPIRE_IN_DISPOSITIVO);
+        
+        
+        const payloald = {
+            id_dispositivo: uuid,
+            marca: data.marca,
+            referencia: data.referencia,
+            latitud: data.latitud,
+            longitud: data.longitud,
+            nombre_microservicio: data.nombre_microservicio,
+            email_responsable: data.email_responsable,
+        }
+        
+        const tokenDispositivo = sign(payloald, keyDevices, {
+            expiresIn: expiresInDispositivo,
+        }); 
+        
+        data.microservicio_interes = process.env.MICROSERVICIO_INTERES;
+        data.modulo_interes = process.env.MODULOS_INTERES;
+        data.uuid = uuid;
+        data.token = tokenDispositivo;
+        data.fecha_creacion = date;
+        data.hora_creacion = time;        
+
+        Request.post({
+            "headers": { 'Authorization': `Bearer ${token}` },
+            "url": `http://${process.env.HOST_AUTH}/api/dispositivos`,
+            "json": data
+        }, (error, response, body) => {
+
+
+            if(error) {
+
+                return callback(`The new device could not be senden to the Core platform`, '01NS_01POST_POST01', null, false);
+
+            }else if(response.body.success === true){
+
+                const queryCrearDispositivos = `
+                    INSERT INTO NODO_SENSOR (
+                        ID_NODO_SENSOR, 
+                        TOKEN, 
+                        MARCA,
+                        REFERENCIA,
+                        LATITUD, 
+                        LONGITUD, 
+                        NOMBRE_MICROSERVICIO,
+                        EMAIL_RESPONSABLE,
+                        FECHA_CREACION, 
+                        HORA_CREACION
+                    ) VALUES (
+                        ?, 
+                        ?, 
+                        ?, 
+                        ?, 
+                        ?, 
+                        ?,
+                        ?,
+                        ?,
+                        ?,
+                        ?
+                    )
+                `;
+        
+                pool.query(
+                    queryCrearDispositivos,
+                    [uuid, tokenDispositivo, data.marca, data.referencia, data.latitud, data.longitud, data.nombre_microservicio, data.email_responsable, date, time],
+                    (error, result) => {
+                        if(error){
+                            return callback(`The node sensor could not be created`, '01NS_01POST_POST01', null, false);
+                        }else{
+                            return callback(null, null, result, true);
+                        }
+                    }
+                )
             }
-        )
+        });
     },
     consultar_nodoSensor_dinamico: (data, callback) => {
         
@@ -65,10 +137,12 @@ module.exports={
             SELECT 
                 ID_NODO_SENSOR,
                 TOKEN,
+                MARCA,
+                REFERENCIA,
                 LATITUD,
                 LONGITUD,
-                DISPOSITIVO_ADQUISICION,
-                ESTADO,
+                EMAIL_RESPONSABLE,
+                DISPOSITIVO_ACTIVO,
                 FECHA_CREACION,
                 HORA_CREACION,
                 FECHA_ACTUALIZACION,

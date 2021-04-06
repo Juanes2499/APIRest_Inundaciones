@@ -76,12 +76,15 @@ module.exports = {
     crearNodoSensor: (req, res) => {
         
         const body = req.body;
+        const token = req.headers.authorization.replace('Bearer ', '');
 
         const parametrosEndpoint = {
+            marca: true,
+            referencia: true,
             latitud: true,
-            longitud: true,
-            dispositivo_adquisicion: true,
-            estado: true,   
+            longitud: true,   
+            nombre_microservicio: true,
+            email_responsable: true,  
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);
@@ -105,7 +108,7 @@ module.exports = {
             })
         }
 
-        crear_nodoSensor(body, (err, errorCode, result, state) => {
+        crear_nodoSensor(body, token, (err, errorCode, result, state) => {
             if(err){
                 console.log(err);
                 
