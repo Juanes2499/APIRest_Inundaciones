@@ -3,7 +3,7 @@ const {
     consultar_nodoSensor_dinamico,
     actualizar_nodoSensor,
     eliminar_nodoSensor,
-    test,
+    actualizar_token_nodoSensor
 } = require('./nodoSensor.service');
 
 const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEjecucion.controller');
@@ -11,68 +11,6 @@ const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEje
 const {MensajeverificarParametrosJson} = require("../../shared/verificarParametrosJson");
 
 module.exports = {
-
-    testt: (req, res) => {
-        
-        const token = req.headers.authorization.replace('Bearer ', '');
-
-        const body = req.body;
-
-        const parametrosEndpoint = {
-            microservicio_interes: true,
-            modulo_interes: true,
-            seleccionar: true,
-            condicion: true,
-            agrupar: true,
-            ordenar: true,  
-        };
-        
-        const arrayParametrosJsonComparar = Object.keys(body);
-        
-        const verificarParametro = MensajeverificarParametrosJson(parametrosEndpoint, arrayParametrosJsonComparar)
-
-        if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
-            
-            const errorData = {
-                codigo_error: '01NS_01POST_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
-            }
-
-            crearReporteLogEjecucion(errorData)
-
-            return res.status(500).json({
-                success: false,
-                statusCode: 500,
-                errorInternalCode: errorData.codigo_error,
-                message: errorData.mensaje_retornado
-            })
-        }
-
-        test(body, token, (err, errorCode, result, state) => {
-            if(err){
-                console.log(err);
-                
-                const errorData = {
-                    codigo_error: errorCode,
-                    mensaje_retornado: err
-                }
-
-                crearReporteLogEjecucion(errorData)
-
-                return res.status(500).json({
-                    success:state,
-                    statusCode:500,
-                    errorInternalCode: errorCode,
-                    message: "Database create error - crearNodoSensor"
-                })
-            }
-            return res.status(201).json({
-                success:state,
-                statusCode:201,
-                message: `The sensor node was succesfully created`,
-            })
-        })
-    },
     crearNodoSensor: (req, res) => {
         
         const body = req.body;
@@ -83,7 +21,7 @@ module.exports = {
             referencia: true,
             latitud: true,
             longitud: true,   
-            nombre_microservicio: true,
+            //nombre_microservicio: true,
             email_responsable: true,  
         };
         
@@ -200,10 +138,12 @@ module.exports = {
 
         const parametrosEndpoint = {
             id_nodo_sensor: true,
+            marca: true,
+            referencia: true,
             latitud: true,
-            longitud: true,
-            dispositivo_adquisicion: true,   
-            estado: true,   
+            longitud: true,   
+            email_responsable: true,  
+            dispositivo_activo: true, 
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);
@@ -257,6 +197,7 @@ module.exports = {
     eliminarNodoSensor: (req, res) => {
         
         const body = req.body;
+        const token = req.headers.authorization.replace('Bearer ', '');
 
         const parametrosEndpoint = {
             id_nodo_sensor: true,
@@ -283,7 +224,7 @@ module.exports = {
             })
         }
 
-        eliminar_nodoSensor(body, (err, errorCode, result, state) => {
+        eliminar_nodoSensor(body, token, (err, errorCode, result, state) => {
             if(state === false){
 
                 console.log(err);
@@ -309,6 +250,67 @@ module.exports = {
                 message: `The node sensor with ID: ${body.id_nodo_sensor} was successfully deleted`
             })
         })
-    }
+    },
+    actualizarTokenNodoSensor: (req, res) => {
+    
+        const body = req.body;
+        const token = req.headers.authorization.replace('Bearer ', '');
 
+        const parametrosEndpoint = {
+            id_nodo_sensor: true,
+            marca: true,
+            referencia: true,
+            latitud: true,
+            longitud: true,   
+            email_responsable: true,
+        };
+
+        const arrayParametrosJsonComparar = Object.keys(body);
+        
+        const verificarParametro = MensajeverificarParametrosJson(parametrosEndpoint, arrayParametrosJsonComparar)
+        
+        if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
+            
+            const errorData = {
+                codigo_error: '01NS_05ACTTOKEN_PARAMETERS00',
+                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+            }
+            
+            crearReporteLogEjecucion(errorData)
+            
+            return res.status(500).json({
+                success: false,
+                statusCode: 500,
+                errorInternalCode: errorData.codigo_error,
+                message: errorData.mensaje_retornado
+            })
+        }
+        
+        actualizar_token_nodoSensor(body, token, (err, errorCode, result, state) => {
+            if(state === false){
+
+                console.log(err);
+
+                const errorData = {
+                    codigo_error: errorCode,
+                    mensaje_retornado: err
+                }
+
+                crearReporteLogEjecucion(errorData)
+
+                return res.status(403).json({
+                    success:state,
+                    statusCode:403,
+                    errorInternalCode: errorCode,
+                    message: "Database put error - error in actualizarTokenNodoSensor",
+                    return: err
+                });
+            }
+            return res.status(200).json({
+                success: state,
+                statusCode: 200,
+                message: `The token for the sensor node with ID: ${body.id_nodo_sensor} was successfully updated`
+            })
+        })
+    }
 }

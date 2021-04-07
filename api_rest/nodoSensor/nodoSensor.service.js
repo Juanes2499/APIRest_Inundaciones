@@ -7,32 +7,6 @@ const { sign } = require("jsonwebtoken");
 const {validarExistenciaDispositivoAutenticacion} = require('../../shared/helper');
 
 module.exports={
-    test: (data, token, callback) => {
-
-        console.log(data)
-
-        // Request.post("http://127.0.0.1:3020/api/dispositivos/get",  (error, response, body) => {
-        //     if(error) {
-        //         //return console.dir(error);
-        //         console.log(error)
-        //     }
-        //     console.log(response)
-        //     console.log(response.body)
-        //     //console.dir(JSON.parse(body));
-        // });
-
-        Request.post({
-            "headers": { 'Authorization': `Bearer ${token}` },
-            "url": "http://127.0.0.1:3020/api/dispositivos/get",
-            "json": data
-        }, (error, response, body) => {
-            if(error) {
-                console.log(error)
-            }
-            console.log(response)
-            console.log(response.body)
-        });     
-    },
     crear_nodoSensor: (data, token, callback) => {
     
         data.email_responsable = data.email_responsable.toLowerCase();
@@ -65,6 +39,7 @@ module.exports={
         data.modulo_interes = process.env.MODULOS_INTERES;
         data.uuid = uuid;
         data.token = tokenDispositivo;
+        data.nombre_microservicio = process.env.MICROSERVICIO_INTERES;
         data.fecha_creacion = date;
         data.hora_creacion = time;        
 
@@ -74,6 +49,7 @@ module.exports={
             "json": data
         }, (error, response, body) => {
 
+            console.log('entro')
 
             if(error) {
 
@@ -131,6 +107,7 @@ module.exports={
                 REFERENCIA,
                 LATITUD,
                 LONGITUD,
+                NOMBRE_MICROSERVICIO,
                 EMAIL_RESPONSABLE,
                 DISPOSITIVO_ACTIVO,
                 FECHA_CREACION,
@@ -138,6 +115,7 @@ module.exports={
                 FECHA_ACTUALIZACION,
                 HORA_ACTUALIZACION
             FROM NODO_SENSOR
+            WHERE NOMBRE_MICROSERVICIO ='${process.env.MICROSERVICIO_INTERES}'
         `;
 
         const queryConsultarNodoSensorDinamico = consultaDinamica(
@@ -170,7 +148,7 @@ module.exports={
             modulo_interes: process.env.MODULOS_INTERES,
             seleccionar:"ID_DISPOSITIVO",
             condicion:{
-                ID_VARIABLE: {
+                ID_DISPOSITIVO: {
                     conector_logico:"",
                     operador: "=",
                     valor_condicion: data.id_nodo_sensor
@@ -209,6 +187,7 @@ module.exports={
 
                             data.microservicio_interes = process.env.MICROSERVICIO_INTERES;
                             data.modulo_interes = process.env.MODULOS_INTERES;
+                            data.id_dispositivo = data.id_nodo_sensor;
                             data.nombre_microservicio = process.env.MICROSERVICIO_INTERES;
                             data.fecha_actualizacion = date;
                             data.hora_actualizacion = time;      
@@ -234,14 +213,13 @@ module.exports={
                                                 DISPOSITIVO_ACTIVO = ?,
                                                 FECHA_ACTUALIZACION = ?,
                                                 HORA_ACTUALIZACION = ?
-                                        WHERE ID_NODO_SENSOR = ?
+                                        WHERE ID_NODO_SENSOR = ? AND NOMBRE_MICROSERVICIO ='${process.env.MICROSERVICIO_INTERES}'
                                     `;
 
                                     pool.query(
                                         queryActulizarNodoSensor,
                                         [data.marca, data.referencia, data.latitud, data.longitud, data.email_responsable, data.dispositivo_activo, date, time, data.id_nodo_sensor],
                                         (error, result) => {
-                                            console.log(result);
                                             if(error){
                                                 return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, '01NS_03PUT_PUT02', null, false);
                                             }
@@ -258,29 +236,179 @@ module.exports={
             }
         })
     },
-    eliminar_nodoSensor: (data, callback) => {
-        pool.query(
-            `SELECT * FROM NODO_SENSOR
-                WHERE ID_NODO_SENSOR = ?`,
-            [data.id_nodo_sensor],
-            (error, result) => {
-                if(result.length === 0){
-                    return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_04DELETE_GET01', null, false);
-                } else if(result.length > 0){
-                    pool.query(
-                        `
-                        DELETE FROM NODO_SENSOR
-                            WHERE ID_NODO_SENSOR = ?`,
-                        [data.id_nodo_sensor],
-                        (error, result) => {
-                            if(error){
-                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be deleted`, '01NS_04DELETE_DELETE02', null, false);
-                            }
-                            return callback(null, null, true)
-                        }
-                    )
+    eliminar_nodoSensor: (data, token, callback) => {
+  
+        const dataConsulta = {
+            microservicio_interes: process.env.MICROSERVICIO_INTERES,
+            modulo_interes: process.env.MODULOS_INTERES,
+            seleccionar:"ID_DISPOSITIVO",
+            condicion:{
+                ID_DISPOSITIVO: {
+                    conector_logico:"",
+                    operador: "=",
+                    valor_condicion: data.id_nodo_sensor
                 }
+            },
+            agrupar:"",
+            ordenar:""
+        } 
+
+        validarExistenciaDispositivoAutenticacion(dataConsulta, token, (err, state) => {
+            if(state === true){
+                pool.query(
+                    `SELECT * FROM NODO_SENSOR
+                        WHERE ID_NODO_SENSOR = ?`,
+                    [data.id_nodo_sensor],
+                    (error, result) => {
+
+                        if(result.length === 0){
+                            return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_04DELETE_GET01', null, false);
+                        } else if(result.length > 0){
+
+                            data.microservicio_interes = process.env.MICROSERVICIO_INTERES;
+                            data.modulo_interes = process.env.MODULOS_INTERES;
+                            data.id_dispositivo = data.id_nodo_sensor;
+
+                            Request.post({
+                                "headers": { 'Authorization': `Bearer ${token}` },
+                                "url": `http://${process.env.HOST_AUTH}/api/dispositivos/delete`,
+                                "json": data
+                            }, (error, response, body) => {
+
+                                if(error) {
+                                    return callback(`The update of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} could not be done in the Core platform`, '01NS_04DELETE_DELETE02', null, false);
+                                }else if(response.body.success === true){
+                                    pool.query(
+                                        `
+                                        DELETE FROM NODO_SENSOR
+                                            WHERE ID_NODO_SENSOR = ?`,
+                                        [data.id_nodo_sensor],
+                                        (error, result) => {
+                                            if(error){
+                                                return callback(`The register with ID: ${data.id_nodo_sensor} could not be deleted`, '01NS_04DELETE_DELETE02', null, false);
+                                            }else{
+                                                return callback(null, null, null, true)
+                                            }
+                                        }
+                                    )
+                                }
+                            })
+                        }
+                    }
+                )
+            }else{
+                return callback(err, '01NS_04DELETE_DELETE02', null, false);
             }
-        )
-    }
+        })
+    },
+    actualizar_token_nodoSensor: (data, token, callback)=>{
+
+        data.email_responsable = data.email_responsable.toLowerCase();
+
+        const dataConsulta = {
+            microservicio_interes: process.env.MICROSERVICIO_INTERES,
+            modulo_interes: process.env.MODULOS_INTERES,
+            seleccionar:"ID_DISPOSITIVO",
+            condicion:{
+                ID_DISPOSITIVO: {
+                    conector_logico:"",
+                    operador: "=",
+                    valor_condicion: data.id_nodo_sensor
+                }
+            },
+            agrupar:"",
+            ordenar:""
+        } 
+
+        validarExistenciaDispositivoAutenticacion(dataConsulta, token, (err, state) => {
+
+            if(state === true){
+
+                let queryConsutarExistenciaDispositivo = `
+                    SELECT * FROM NODO_SENSOR
+                    WHERE ID_NODO_SENSOR = ?
+                `;
+                    
+                pool.query(
+                    queryConsutarExistenciaDispositivo,
+                    [data.id_nodo_sensor],
+                    (error, resultDevice) => {
+        
+                        if (error){
+                            return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                        }
+        
+                        if(resultDevice.length === 0){
+        
+                            return callback(`The device with ID: ${data.id_dispositivo} was not found`, null, false);
+        
+                        }else if (resultDevice.length > 0){
+        
+                            const resultDeviceToJson = JSON.parse(JSON.stringify(resultDevice))[0];
+        
+                            const key = process.env.TOKEN_KEY_DEVICES.toString();
+                            const expiresInDispositivo = parseInt(process.env.TOKEN_EXPIRE_IN_DISPOSITIVO);
+        
+                            data.microservicio_interes = process.env.MICROSERVICIO_INTERES;
+                            data.modulo_interes = process.env.MODULOS_INTERES;
+                            data.id_dispositivo = data.id_nodo_sensor;
+                            data.nombre_microservicio = process.env.MICROSERVICIO_INTERES;    
+
+                            const payloald = {
+                                id_dispositivo: data.id_dispositivo,
+                                marca: data.marca,
+                                referencia: data.referencia,
+                                latitud: data.latitud,
+                                longitud: data.longitud,
+                                nombre_microservicio: data.nombre_microservicio,
+                                email_responsable: data.email_responsable,
+                            }
+                            
+                            const TokenDispositivo = sign(payloald, key, {
+                                expiresIn: expiresInDispositivo,
+                            });
+
+                            data.token = TokenDispositivo
+
+                            Request.put({
+                                "headers": { 'Authorization': `Bearer ${token}` },
+                                "url": `http://${process.env.HOST_AUTH}/api/dispositivos/actualizarTokenDispositivo`,
+                                "json": data
+                            }, (error, response, body) => {
+
+                                if(error) {
+                                    return callback(`The update of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} could not be done in the Core platform`, '01NS_04DELETE_DELETE02', null, false);
+                                }else if(response.body.success === true){
+                                    let queryActualizarTokenDispositivo = `
+                                        UPDATE NODO_SENSOR
+                                            SET TOKEN = ?
+                                        WHERE ID_NODO_SENSOR = ? AND EMAIL_RESPONSABLE = ? 
+                                    `; 
+                
+                                    pool.query(
+                                        queryActualizarTokenDispositivo,
+                                        [
+                                            data.token,
+                                            data.id_nodo_sensor,
+                                            data.email_responsable
+                                        ],
+                                        (error, result) =>{
+                
+                                            if(error){
+                                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false)
+                                            }else{
+                                                return callback(null, null, null, true)
+                                            }
+                                        }
+                                    );
+                                }
+                            })
+                        }
+                    }
+                )
+            }else{
+                return callback(err, null, null, false);
+            }
+        })
+    },
 }
