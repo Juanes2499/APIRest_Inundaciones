@@ -39,7 +39,7 @@ module.exports = {
                         return callback(`The token of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is not the same`, '05DNS_01POST_GET02', null, false);
                     }
 
-                    if(nodoSensorToJson.ESTADO != true){
+                    if(nodoSensorToJson.DISPOSITIVO_ACTIVO != true){
                         return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is disabled`, '05DNS_01POST_GET03', null, false);
                     }
 

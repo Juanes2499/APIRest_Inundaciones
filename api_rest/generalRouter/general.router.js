@@ -12,6 +12,7 @@ if(auth === "true"){
     const configuracionVariablesNodoSensorAuth = require('../configuracionVariablesNodoSensor/configuracionVariblesNodoSensor.authentication');
     const reglasNodoSensorAuth = require('../reglasNodoSensor/reglasNodoSensor.authentication');
     const datosNodoSensorAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
+    const publishDatosNodo = require('../datosNodoSensor/datosNodoSensor.publish.authentication');
 
     const erroresLogEjecucionAuth = require('../erroresLogEjecucion/erroresLogEjecucion.authentication');
     const ReporteErroresLogEjecucionAuth = require('../reporteLogEjecucion/reporteLogEjecucion.authentication');
@@ -21,6 +22,7 @@ if(auth === "true"){
     generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorAuth);
     generalRouters.use("/reglasNodoSensor", reglasNodoSensorAuth);
     generalRouters.use("/datosNodoSensor", datosNodoSensorAuth);
+    generalRouters.use("/publishDatosNodo", publishDatosNodo);
 
     generalRouters.use("/erroresLogEjecucion", erroresLogEjecucionAuth);
     generalRouters.use("/reporteErroresLogEjecucion", ReporteErroresLogEjecucionAuth);

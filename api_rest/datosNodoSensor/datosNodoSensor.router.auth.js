@@ -5,6 +5,6 @@ const {
 
 const router = require('express').Router();
 
-router.post("/get", consutarDatosNodoSensorDinamico);
+router.post("/", crearDatoNodoSensor);
 
 module.exports = router;

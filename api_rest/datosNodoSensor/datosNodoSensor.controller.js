@@ -2,11 +2,9 @@ const {
     crear_datoNodoSensor,
     consutar_datosNodoSensor_dinamico,
 } = require('./datosNodoSensor.service');
-
 const {crearReporteLogEjecucion} = require('../reporteLogEjecucion/reporteLogEjecucion.controller');
-
 const {MensajeverificarParametrosJson} = require("../../shared/verificarParametrosJson");
-
+const jwt = require("jsonwebtoken");
 
 module.exports = {
     crearDatoNodoSensor: (req, res) => {
@@ -41,31 +39,45 @@ module.exports = {
             })
         }
 
-        //Se llama al servicio para ingresar el dato
-        crear_datoNodoSensor(body, (err, errorCode, result, state) => {
-            if(state === false){
+        const key = process.env.TOKEN_KEY_DEVICES.toString();
 
-                console.log(err);
-
-                const errorData = {
-                    codigo_error: errorCode,
-                    mensaje_retornado: err
-                }
-
-                crearReporteLogEjecucion(errorData)
-
-                return res.status(500).json({
+        jwt.verify(body.token, key, (errorsToken, decoded) => {
+            if(errorsToken){
+                return res.status(401).json({
                     success:state,
-                    statusCode:500,
+                    statusCode:401,
                     errorInternalCode: errorCode,
                     message: "Database create error - error in crearDatoNodoSensor",
-                    return: err
+                    return: `The token of the device is not valid`
                 })
-            }else if(state === true){
-                return res.status(201).json({
-                    success:state,
-                    statusCode:201,
-                    message: `The data for the sensor node with ID_NODO_SENSOR: ${body.id_nodo_sensor} was successfully created`
+            }else{
+                //Se llama al servicio para ingresar el dato
+                crear_datoNodoSensor(body, (err, errorCode, result, state) => {
+                    if(state === false){
+
+                        console.log(err);
+
+                        const errorData = {
+                            codigo_error: errorCode,
+                            mensaje_retornado: err
+                        }
+
+                        crearReporteLogEjecucion(errorData)
+
+                        return res.status(500).json({
+                            success:state,
+                            statusCode:500,
+                            errorInternalCode: errorCode,
+                            message: "Database create error - error in crearDatoNodoSensor",
+                            return: err
+                        })
+                    }else if(state === true){
+                        return res.status(201).json({
+                            success:state,
+                            statusCode:201,
+                            message: `The data for the sensor node with ID_NODO_SENSOR: ${body.id_nodo_sensor} was successfully created`
+                        })
+                    }
                 })
             }
         })
