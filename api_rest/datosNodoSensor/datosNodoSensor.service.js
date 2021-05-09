@@ -20,6 +20,8 @@ clientMqtt.on("connect", () => {
 module.exports = {
     crear_datoNodoSensor: (data, callback) => {
 
+        //console.log(data)
+
         const queryCosultarExistenciaNodoSensor = `
             SELECT * FROM NODO_SENSOR
                 WHERE ID_NODO_SENSOR = ?
@@ -81,104 +83,110 @@ module.exports = {
                                 return callback(msgVariablesError, '05DNS_01POST_GET04', null, false);
                             }
 
-                            const VariablesInsertar = Object.keys(data.variables);
+                            try {
 
-                            for(var i = 0; i < VariablesInsertar.length; i++){
+                                const VariablesInsertar = Object.keys(data.variables);
 
-                                const idNodoSensor = data.id_nodo_sensor;
-                                const nombreVariable = VariablesInsertar[i].toUpperCase();
-                                const valorDato = Object.values(data.variables)[i];
+                                for(var i = 0; i < VariablesInsertar.length; i++){
 
-                                const validacionReglas = (callback) => {
+                                    const idNodoSensor = data.id_nodo_sensor;
+                                    const nombreVariable = VariablesInsertar[i].toUpperCase();
+                                    const valorDato = Object.values(data.variables)[i];
 
-                                    //Se hace el envio de la notificacion
-                                    const queryConsultarRegla = `
-                                        SELECT * FROM REGLAS_NODO_SENSOR 
-                                        WHERE ID_NODO_SENSOR = ? AND NOMBRE_VARIABLE = ?
-                                    `;
+                                    const validacionReglas = (callback) => {
 
-                                    pool.query(
-                                        queryConsultarRegla,
-                                        [idNodoSensor, nombreVariable],
-                                        (error, result) => {
+                                        //Se hace el envio de la notificacion
+                                        const queryConsultarRegla = `
+                                            SELECT * FROM REGLAS_NODO_SENSOR 
+                                            WHERE ID_NODO_SENSOR = ? AND NOMBRE_VARIABLE = ?
+                                        `;
 
-                                            const datosNotificados = {
-                                                valorNotificado: false,
-                                                idRegla: null,
-                                                expesionEvaluada: null
-                                            }
+                                        pool.query(
+                                            queryConsultarRegla,
+                                            [idNodoSensor, nombreVariable],
+                                            (error, result) => {
 
-                                            if(result.length > 0){
-                                                
-                                                const reglaFromJson = JSON.parse(JSON.stringify(result))[0];
-                                                
-                                                const regex = new RegExp(reglaFromJson.EXPRESION)
+                                                const datosNotificados = {
+                                                    valorNotificado: false,
+                                                    idRegla: null,
+                                                    expesionEvaluada: null
+                                                }
 
-                                                if(regex.test(valorDato)){
-
-                                                    datosNotificados.valorNotificado = true;
-                                                    datosNotificados.idRegla = reglaFromJson.ID_REGLA;
-                                                    datosNotificados.expesionEvaluada = reglaFromJson.EXPRESION;
-
-                                                    const topic = `${process.env.MQTT_TOPIC_NOTIFICACIONS}`;
+                                                if(result.length > 0){
                                                     
-                                                    const optionsPublish = {
-                                                        retain: true,
-                                                        qos: 2
-                                                    };
+                                                    const reglaFromJson = JSON.parse(JSON.stringify(result))[0];
+                                                    
+                                                    const regex = new RegExp(reglaFromJson.EXPRESION)
 
-                                                    const messagePublish = {
-                                                        id_nodo_sensor: idNodoSensor,
-                                                        nombre_variable: nombreVariable,
-                                                        valor_dato: valorDato
+                                                    if(regex.test(valorDato)){
+
+                                                        datosNotificados.valorNotificado = true;
+                                                        datosNotificados.idRegla = reglaFromJson.ID_REGLA;
+                                                        datosNotificados.expesionEvaluada = reglaFromJson.EXPRESION;
+
+                                                        const topic = `${process.env.MQTT_TOPIC_NOTIFICACIONS}`;
+                                                        
+                                                        const optionsPublish = {
+                                                            retain: true,
+                                                            qos: 2
+                                                        };
+
+                                                        const messagePublish = {
+                                                            id_nodo_sensor: idNodoSensor,
+                                                            nombre_variable: nombreVariable,
+                                                            valor_dato: valorDato
+                                                        }
+
+                                                        const objMessagePublish= JSON.stringify(messagePublish); // payload is a buffer
+
+                                                        clientMqtt.publish(topic, objMessagePublish, optionsPublish)
                                                     }
+                                                }
 
-                                                    const objMessagePublish= JSON.stringify(messagePublish); // payload is a buffer
+                                                return callback(datosNotificados);
+                                            }
+                                        )
+                                    }                             
 
-                                                    clientMqtt.publish(topic, objMessagePublish, optionsPublish)
+                                    validacionReglas(parametersRules => {
+
+                                        const res = new Object(parametersRules);
+                                        
+                                        //Se inserta el dato despues de haber validado la regla y la regex
+                                        const queryInsertarDatosNodoSensor = `
+                                            INSERT 
+                                                INTO DATOS_NODO_SENSOR
+                                                (ID_DATO, ID_NODO_SENSOR, ID_VARIABLE, NOMBRE_VARIABLE, VALOR_DATO, VALOR_NOTIFICADO, ID_REGLA, EXPRESION_EVALUADA, FECHA_CREACION, HORA_CREACION)
+                                            VALUES 
+                                                (
+                                                    UUID(),
+                                                    ?,
+                                                    (SELECT ID_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE NOMBRE_VARIABLE = ?),
+                                                    ?,
+                                                    ?,
+                                                    ?,
+                                                    ?,
+                                                    ?,
+                                                    CURDATE(),
+                                                    CURTIME()
+                                                )
+                                        `;
+        
+                                        pool.query(
+                                            queryInsertarDatosNodoSensor,
+                                            [idNodoSensor, nombreVariable, nombreVariable, valorDato, res.valorNotificado, res.idRegla, res.expesionEvaluada],
+                                            (error, result) => {
+                                                if(error){
+                                                    return callback(`The data: {${nombreVariable}: ${valorDato}} could not be created for the sensor node with ID_NODO_SENSOR: ${idNodoSensor}`, '05DNS_01POST_POST05', null, false);
                                                 }
                                             }
-
-                                            return callback(datosNotificados);
-                                        }
-                                    )
-                                }                             
-
-                                validacionReglas(parametersRules => {
-
-                                    const res = new Object(parametersRules);
-                                    
-                                    //Se inserta el dato despues de haber validado la regla y la regex
-                                    const queryInsertarDatosNodoSensor = `
-                                        INSERT 
-                                            INTO DATOS_NODO_SENSOR
-                                            (ID_DATO, ID_NODO_SENSOR, ID_VARIABLE, NOMBRE_VARIABLE, VALOR_DATO, VALOR_NOTIFICADO, ID_REGLA, EXPRESION_EVALUADA, FECHA_CREACION, HORA_CREACION)
-                                        VALUES 
-                                            (
-                                                UUID(),
-                                                ?,
-                                                (SELECT ID_VARIABLE FROM VARIABLES_NODO_SENSOR WHERE NOMBRE_VARIABLE = ?),
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                ?,
-                                                CURDATE(),
-                                                CURTIME()
-                                            )
-                                    `;
-    
-                                    pool.query(
-                                        queryInsertarDatosNodoSensor,
-                                        [idNodoSensor, nombreVariable, nombreVariable, valorDato, res.valorNotificado, res.idRegla, res.expesionEvaluada],
-                                        (error, result) => {
-                                            if(error){
-                                                return callback(`The data: {${nombreVariable}: ${valorDato}} could not be created for the sensor node with ID_NODO_SENSOR: ${idNodoSensor}`, '05DNS_01POST_POST05', null, false);
-                                            }
-                                        }
-                                    )
-                                })
+                                        )
+                                    })
+                                }
+                            } catch {
+                                return callback(`There are some problems to read the data of the variables`, '05DNS_01POST_POST05', null, false);
                             }
+
                             return callback(null, null, result, true);
                         }
                     )

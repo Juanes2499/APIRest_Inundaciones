@@ -40,7 +40,7 @@ if(auth === "true"){
     const erroresLogEjecucionRouter = require('../erroresLogEjecucion/erroresLogEjecucion.router');
     const ReporteErroresLogEjecucionRouter = require('../reporteLogEjecucion/reporteLogEjecucion.router');
 
-    //generalRouters.use("/nodoSensor", nodoSensorRouter);
+    generalRouters.use("/nodoSensor", nodoSensorRouter);
     generalRouters.use("/variablesNodoSensor", variablesNodoSensorRouter);
     generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorRouter);
     generalRouters.use("/reglasNodoSensor", reglasNodoSensorRouter);

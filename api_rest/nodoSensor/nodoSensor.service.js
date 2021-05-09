@@ -32,7 +32,7 @@ module.exports={
         }
         
         const tokenDispositivo = sign(payloald, keyDevices, {
-            expiresIn: expiresInDispositivo,
+            //expiresIn: expiresInDispositivo,
         }); 
         
         data.microservicio_interes = process.env.MICROSERVICIO_INTERES;
@@ -365,7 +365,7 @@ module.exports={
                             }
                             
                             const TokenDispositivo = sign(payloald, key, {
-                                expiresIn: expiresInDispositivo,
+                                //expiresIn: expiresInDispositivo,
                             });
 
                             data.token = TokenDispositivo

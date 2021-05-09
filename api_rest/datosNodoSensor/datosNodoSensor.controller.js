@@ -10,7 +10,7 @@ module.exports = {
     crearDatoNodoSensor: (req, res) => {
         
         const body = req.body;
-
+        
         //Se verifica si la peticion tiene los parámetros necesarios
         const parametrosEndpoint = {
             id_nodo_sensor: true,
@@ -18,19 +18,20 @@ module.exports = {
             variables: true,
         };
         
+        
         const arrayParametrosJsonComparar = Object.keys(body);
         
         const verificarParametro = MensajeverificarParametrosJson(parametrosEndpoint, arrayParametrosJsonComparar)
-
+        
         if(verificarParametro.error === true || verificarParametro.messageFaltantes != null || verificarParametro.messageMalEscritos != null ){
             
             const errorData = {
                 codigo_error: '05DNS_01POST_PARAMETER00',
                 mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
             }
-
+            
             crearReporteLogEjecucion(errorData)
-
+            
             return res.status(500).json({
                 success: false,
                 statusCode: 500,
@@ -38,15 +39,15 @@ module.exports = {
                 message: errorData.mensaje_retornado
             })
         }
-
+        
         const key = process.env.TOKEN_KEY_DEVICES.toString();
 
         jwt.verify(body.token, key, (errorsToken, decoded) => {
+       
             if(errorsToken){
                 return res.status(401).json({
-                    success:state,
+                    success: false,
                     statusCode:401,
-                    errorInternalCode: errorCode,
                     message: "Database create error - error in crearDatoNodoSensor",
                     return: `The token of the device is not valid`
                 })
@@ -71,10 +72,11 @@ module.exports = {
                             message: "Database create error - error in crearDatoNodoSensor",
                             return: err
                         })
+                        
                     }else if(state === true){
-                        return res.status(201).json({
+                        return res.status(200).json({
                             success:state,
-                            statusCode:201,
+                            statusCode:200,
                             message: `The data for the sensor node with ID_NODO_SENSOR: ${body.id_nodo_sensor} was successfully created`
                         })
                     }
