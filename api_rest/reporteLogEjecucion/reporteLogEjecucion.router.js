@@ -4,6 +4,6 @@ const {
 
 const router = require('express').Router();
 
-router.get("/", consultarReporteLogEjecucionDinamico);
+router.post("/get", consultarReporteLogEjecucionDinamico);
 
 module.exports = router;

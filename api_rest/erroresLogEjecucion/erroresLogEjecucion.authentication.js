@@ -28,7 +28,7 @@ erroresLogEjecucionAuth.use("/", (req, res) => {
                     return res.status(500).json({
                         success:false,
                         statusCode:500,
-                        message: "The User has not access to Configuracion Variables Node Sensor"
+                        message: "The User has not access to Errores log de ejecución"
                     })
                 }
             }

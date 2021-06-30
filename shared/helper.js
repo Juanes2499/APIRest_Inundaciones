@@ -10,7 +10,7 @@ module.exports = {
 
             if(error) {
                 return callback('There is an error trying to request the device created', false);
-            }else if(response.body.data.length > 0){
+            }else if(response){
                 return callback(null, true);
             }
         })
