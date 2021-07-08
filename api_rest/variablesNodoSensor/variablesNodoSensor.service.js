@@ -22,6 +22,11 @@ module.exports = {
             queryConsultarExisteciaVariable,
             [data.nombre_variable],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length > 0){
                     return callback(`The variable: ${data.nombre_variable} already exist`, '02VNS_01POST_GET01', null, false);
                 }else if(result.length === 0){
@@ -93,9 +98,15 @@ module.exports = {
             queryConsultarVariablesNodoSensorDinamico.query,
             [],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`There is/are no record(s) for variables sensor node with the parameter(s) set`, '02VNS_02GET_GET02', null, false);
                 }
+
                 return callback(null, null, result, true);
             }
         )
@@ -121,10 +132,12 @@ module.exports = {
             [data.id_variable],
             (error, result) => {
 
-                if(result.length === 0){
-                    
-                    return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, '02VNS_03PUT_GET02', null, false);
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
 
+                if(result.length === 0){
+                    return callback(`The register with ID_VARIABLE: ${data.id_variable} was not found`, '02VNS_03PUT_GET02', null, false);
                 }else if(result.length > 0){
 
                     const rangoMin = Number(data.rango_min);
@@ -145,6 +158,10 @@ module.exports = {
                         queryComprobarExistenciaVariablesAntesActualizar,
                         [data.nombre_variable],
                         (error, result) => {
+
+                            if (error){
+                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                            }
 
                             const existenciaVariableJson = JSON.parse(JSON.stringify(result))[0] ? JSON.parse(JSON.stringify(result))[0] : {ID_VARIABLE: data.id_variable} ;
 
@@ -170,9 +187,11 @@ module.exports = {
                                     queryActualizarVariableByID,
                                     [data.nombre_variable, data.detalles, data.tipo_dato, data.unidad_medida, data.rango_min, data.rango_max, data.estado, data.id_variable, data.nombre_variable],
                                     (error, result) => {
+
                                         if(error){
                                             return callback(`The register with ID_VARIABLE: ${data.id_variable} could not be updated`, '02VNS_03PUT_PUT06', null, false);
                                         }
+
                                         return callback(null, null, null, true);
                                     }
                                 )
@@ -198,6 +217,11 @@ module.exports = {
             queryConsultarVariableNodoSensorByIDByNombreVariable,
             [data.id_variable, data.nombre_variable],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     if(data.id_variable && data.nombre_variable){
                         return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} was not found`, '02VNS_04DELETE_GET01', null, false);
@@ -217,6 +241,7 @@ module.exports = {
                         queryEliminarVariableByIdByNombreVariable,
                         [data.id_variable, data.nombre_variable],
                         (error, result) => {
+
                             if(error){
                                 if(data.id_variable && data.nombre_variable){
                                     return callback(`The register with ID_VARIABLE: ${data.id_variable} and NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, '02VNS_04delete_DELETE04', null, false);
@@ -226,6 +251,7 @@ module.exports = {
                                     return callback(`The register with NOMBRE_VARIABLE: ${data.nombre_variable} could not be deleted`, '02VNS_04DELETE_DELETE06', null, false);
                                 }
                             }
+                            
                             return callback(null, null, null, true);
                         }
                     )

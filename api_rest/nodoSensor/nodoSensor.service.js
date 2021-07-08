@@ -99,8 +99,6 @@ module.exports={
             [],
             (error, result) => {
 
-                console.log(error)
-
                 if (error){
                     return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
                 }
