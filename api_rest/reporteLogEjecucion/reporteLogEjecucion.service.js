@@ -13,6 +13,10 @@ module.exports={
             [errorData.codigo_error],
             (error, result) => {
 
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(null, null, null, false);
                 }else if (result.length > 0 ){
@@ -87,6 +91,10 @@ module.exports={
             queryConsultarReporteLogEjecucionDinamico.query,
             [],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
 
                 if(result.length === 0){
                     return callback(`There is/are no record(s) for log execution report with the parameter(s) set`, '07RLE_02GET_GET02', null, false);
