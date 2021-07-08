@@ -18,6 +18,10 @@ module.exports = {
             [data.id_nodo_sensor, data.nombre_variable],
             (error, result) => {
 
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 const resultToJson = JSON.parse(JSON.stringify(result))[0];
 
                 const nodoSensorExist = parseInt(resultToJson.NODO_SENSOR_EXIST);
@@ -41,6 +45,10 @@ module.exports = {
                         [data.id_nodo_sensor, data.nombre_variable],
                         (error, result) => {
 
+                            if (error){
+                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                            }
+
                             const existenciaReglaJson = JSON.parse(JSON.stringify(result))[0];
 
                             if(result.length > 0){
@@ -56,6 +64,10 @@ module.exports = {
                                     queryVerificarConfiguracionVariable,
                                     [data.id_nodo_sensor, data.nombre_variable],
                                     (error, result) => {
+
+                                        if (error){
+                                            return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                                        }
                                         
                                         if(result.length === 0){
                                             return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and NOMBRE_VARIABLE: ${data.nombre_variable} has not been associated in variable configuration, please set up this configuration`, '04RVNS_01POST_GET05', null, false);
@@ -122,6 +134,10 @@ module.exports = {
             [],
             (error, result) => {
 
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`There is/are no record(s) for rule configuration with the parameter(s) set`, '04RVNS_02GET_GET02', null, false);
                 }else if (result.length > 0){
@@ -141,6 +157,10 @@ module.exports = {
             queryConsultarExisteciaRegla,
             [data.id_regla],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
                 
                 if(result.length === 0){
                     return callback(`The register with ID_REGLA: ${data.id_regla} was not found`, '04RVNS_03PUT_GET01', null, false);
@@ -159,6 +179,10 @@ module.exports = {
                         queryConsultarExistenciaVariableNodoSensor,
                         [data.id_nodo_sensor, data.nombre_variable],
                         (error, result) => {
+
+                            if (error){
+                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                            }
 
                             const resultToJson = JSON.parse(JSON.stringify(result))[0];
 
@@ -183,6 +207,10 @@ module.exports = {
                                     [data.id_nodo_sensor, data.nombre_variable],
                                     (error, result) => {
 
+                                        if (error){
+                                            return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                                        }
+
                                         const existenciaReglaJson = JSON.parse(JSON.stringify(result))[0] ? JSON.parse(JSON.stringify(result))[0] : {ID_REGLA: data.id_regla} ;
 
                                         if(existenciaReglaJson.ID_REGLA != data.id_regla){
@@ -199,6 +227,10 @@ module.exports = {
                                                 queryVerificarConfiguracionVariable,
                                                 [data.id_nodo_sensor, data.nombre_variable],
                                                 (error, result) => {
+
+                                                    if (error){
+                                                        return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                                                    }
 
                                                     if(result.length === 0){
                                                         return callback(`The variable configuration with ID_NODO_SENSOR: ${data.id_nodo_sensor} and NOMBRE_VARIABLE: ${data.nombre_variable} has not been associated in variable configuration, please set up this configuration`, '04RVNS_03PUT_GET06', null, false);
@@ -219,6 +251,10 @@ module.exports = {
                                                             queryActualizarRegla,
                                                             [data.id_nodo_sensor, data.nombre_variable, data.nombre_variable, data.expresion, data.id_regla],
                                                             (error, result) => {
+
+                                                                if (error){
+                                                                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                                                                }
     
                                                                 if(error){
                                                                     return callback(`The register with ID_REGLA: ${data.id_regla} could not be updated`, '04RVNS_03PUT_PUT07', null, false);
@@ -251,6 +287,10 @@ module.exports = {
             queryConsultarExisteciaRegla,
             [data.id_regla],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
                 
                 if(result.length === 0){
                     return callback(`The register with ID_REGLA: ${data.id_regla} was not found`, '04RVNS_04DELETE_GET01', null, false);
