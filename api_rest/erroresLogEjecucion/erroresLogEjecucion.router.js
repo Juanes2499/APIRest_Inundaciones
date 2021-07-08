@@ -9,8 +9,8 @@ const {
 const router = require('express').Router();
 
 router.post("/", crearErroresLogEjecucion);
-router.get("/", consultarErroresLogEjecucion);
+router.post("/get", consultarErroresLogEjecucion);
 router.put("/", actualizarErrorLogEjecucionById);
-router.delete("/", eliminarErrorLogEejecucionById);
+router.post("/delete", eliminarErrorLogEejecucionById);
 
 module.exports = router;

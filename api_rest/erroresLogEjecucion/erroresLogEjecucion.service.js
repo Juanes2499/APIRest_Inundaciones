@@ -25,6 +25,10 @@ module.exports = {
             [data.codigo_error, data.url_endpoint, data.modulo, data.endpoint, data.metodo_primario, data.metodo_secundario],
             (error, result) => {
 
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length > 0){
                     return callback(`The error type register with CODIGO_ERROR: ${data.codigo_error} and URL_ENDPOINT: ${data.URL_ENDPOINT} and MODULO: ${data.modulo} and ENDPOINT ${data.endpoint} and METODO: ${data.metodo} already exist`, '06ELE_01POST_GET01', null, false);
                 }else if(result.length === 0){
@@ -40,9 +44,11 @@ module.exports = {
                         queryInsertarError,
                         [data.codigo_error, data.url_endpoint, data.modulo, data.endpoint, data.metodo_primario, data.metodo_secundario, data.detalles, data.mensaje_pantalla],
                         (error, result) => {
+
                             if(error){
                                 return callback(`The error type with CODIGO_ERROR: ${data.codigo_error} could not be created`, '06ELE_01POST_POST02', null, false);
                             }
+
                             return callback(null, result, true);
                         }
                     )
@@ -88,6 +94,10 @@ module.exports = {
             [],
             (error, result) => {
 
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`There is/are no record(s) for log execution log with the parameter(s) set`, '06ELE_02GET_GET02', null, false);
                 }else if (result.length > 0){
@@ -107,6 +117,10 @@ module.exports = {
             queryConsultarExistenciaError,
             [data.id_error],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
                 
                 if(result.length === 0){
                     return callback(`The register with ID_ERROR: ${data.id_regla} was not found`, '06ELE_03PUT_GET01', null, false);
@@ -180,6 +194,10 @@ module.exports = {
             queryConsultarExistenciaError,
             [data.id_error],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
                 
                 if(result.length === 0){
                     return callback(`The register with ID_ERROR: ${data.id_error} was not found`, '06ELE_04DELETE_GET01', null, false);
