@@ -2,26 +2,64 @@ const pool = require("../../config/database");
 const crypto = require("crypto");
 const base64url = require("base64url");
 const consultaDinamica = require("../../shared/consultaDinamica");
+const { sign } = require("jsonwebtoken");
+const CreatorUUID = require('uuid');
 
 module.exports={
     crear_nodoSensor: (data, callback) => {
 
-        const token = base64url(crypto.randomBytes(200));
+        data.email_responsable = data.email_responsable.toLowerCase();
+        
+        const uuid = CreatorUUID.v4();
+
+        const payloald = {
+            id_dispositivo: uuid,
+            marca: data.marca,
+            referencia: data.referencia,
+            latitud: data.latitud,
+            longitud: data.longitud,
+            email_responsable: data.email_responsable,
+        }
+        
+        const keyDevices = process.env.TOKEN_KEY_DEVICES.toString();
+        const tokenDispositivo = sign(payloald, keyDevices, {
+            //expiresIn: expiresInDispositivo,
+        }); 
+
+        const queryCrearDispositivos = `
+            INSERT INTO NODO_SENSOR (
+                ID_NODO_SENSOR, 
+                TOKEN, 
+                MARCA,
+                REFERENCIA,
+                LATITUD, 
+                LONGITUD, 
+                EMAIL_RESPONSABLE,
+                FECHA_CREACION, 
+                HORA_CREACION
+            ) VALUES (
+                ?,
+                ?, 
+                ?, 
+                ?, 
+                ?,
+                ?,
+                ?,
+                CURDATE(),
+                CURTIME()
+            )
+        `;
 
         pool.query(
-            `
-            INSERT 
-                INTO NODO_SENSOR 
-                (ID_NODO_SENSOR, TOKEN, LATITUD, LONGITUD, DISPOSITIVO_ADQUISICION, ESTADO, FECHA_CREACION, HORA_CREACION)
-            VALUES 
-                (UUID(), ?, ?, ?, ?, ?, CURDATE(), CURTIME())
-            `,
-            [token, data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado],
+            queryCrearDispositivos,
+            [uuid, tokenDispositivo, data.marca, data.referencia, data.latitud, data.longitud, data.email_responsable],
             (error, result) => {
+                
                 if(error){
                     return callback(`The node sensor could not be created`, '01NS_01POST_POST01', null, false);
+                }else{
+                    return callback(null, null, null, true);
                 }
-                return callback(null, null, result, true);
             }
         )
     },
@@ -31,10 +69,12 @@ module.exports={
             SELECT 
                 ID_NODO_SENSOR,
                 TOKEN,
+                MARCA,
+                REFERENCIA,
                 LATITUD,
                 LONGITUD,
-                DISPOSITIVO_ADQUISICION,
-                ESTADO,
+                EMAIL_RESPONSABLE,
+                DISPOSITIVO_ACTIVO,
                 FECHA_CREACION,
                 HORA_CREACION,
                 FECHA_ACTUALIZACION,
@@ -58,9 +98,17 @@ module.exports={
             queryConsultarNodoSensorDinamico.query,
             [],
             (error, result) => {
+
+                console.log(error)
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`There is/are no record(s) for sensor node with the parameter(s) set`, '01NS_02GET_GET02', null, false);
                 }
+
                 return callback(null, null, result, true);
             }
         )
@@ -75,19 +123,24 @@ module.exports={
                 if(result.length === 0){
                     return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_03PUT_GET01', null, false);
                 }else if (result.length > 0){
-                    pool.query(
-                        `
+                    const queryActulizarNodoSensor = `
                         UPDATE NODO_SENSOR
-                            SET LATITUD = ?,
+                            SET 
+                                MARCA = ?,
+                                REFERENCIA = ?,
+                                LATITUD = ?,
                                 LONGITUD = ?,
-                                DISPOSITIVO_ADQUISICION = ?,
-                                ESTADO = ?,
+                                EMAIL_RESPONSABLE = ?,
+                                DISPOSITIVO_ACTIVO = ?,
                                 FECHA_ACTUALIZACION = CURDATE(),
-                                HORA_ACTUALIZACION = CURTIME() 
-                            WHERE ID_NODO_SENSOR = ?`,
-                        [data.latitud, data.longitud, data.dispositivo_adquisicion, data.estado, data.id_nodo_sensor],
+                                HORA_ACTUALIZACION = CURTIME()
+                        WHERE ID_NODO_SENSOR = ?
+                    `;
+
+                    pool.query(
+                        queryActulizarNodoSensor,
+                        [data.marca, data.referencia, data.latitud, data.longitud, data.email_responsable, data.dispositivo_activo, data.id_nodo_sensor],
                         (error, result) => {
-                            console.log(result);
                             if(error){
                                 return callback(`The register with ID: ${data.id_nodo_sensor} could not be updated`, '01NS_03PUT_PUT02', null, false);
                             }
@@ -104,6 +157,11 @@ module.exports={
                 WHERE ID_NODO_SENSOR = ?`,
             [data.id_nodo_sensor],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`The register with ID: ${data.id_nodo_sensor} was not found`, '01NS_04DELETE_GET01', null, false);
                 } else if(result.length > 0){
@@ -122,5 +180,79 @@ module.exports={
                 }
             }
         )
-    }
+    },
+    actualizar_token_nodoSensor: (data, callback)=>{
+
+        data.email_responsable = data.email_responsable.toLowerCase();
+
+
+        let queryConsutarExistenciaDispositivo = `
+            SELECT * FROM NODO_SENSOR
+            WHERE ID_NODO_SENSOR = ? AND EMAIL_RESPONSABLE = ?
+        `;
+            
+        pool.query(
+            queryConsutarExistenciaDispositivo,
+            [data.id_nodo_sensor, data.email_responsable],
+            (error, resultDevice) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
+                if(resultDevice.length === 0){
+
+                    return callback(`The device with ID: ${data.id_nodo_sensor} was not found`, null, false);
+
+                }else if (resultDevice.length > 0){
+
+                    const resultDeviceToJson = JSON.parse(JSON.stringify(resultDevice))[0]
+
+                    const key = process.env.TOKEN_KEY_DEVICES.toString();
+
+                    const payloald = {
+                        id_dispositivo: data.id_nodo_sensor,
+                        marca: resultDeviceToJson.MARCA,
+                        referencia: resultDeviceToJson.REFERENCIA,
+                        latitud: resultDeviceToJson.LATITUD,
+                        longitud: resultDeviceToJson.LONGITUD,
+                        email_responsable: data.email_responsable,
+                    }
+
+                    console.log(resultDeviceToJson)
+                    console.log(payloald)
+                    
+                    const TokenDispositivo = sign(payloald, key, {
+                        //expiresIn: expiresInDispositivo,
+                    });
+
+                    let queryActualizarTokenDispositivo = `
+                        UPDATE NODO_SENSOR
+                            SET 
+                                TOKEN = ?,
+                                FECHA_ACT_TOKEN = CURDATE(),
+                                HORA_ACT_TOKEN = CURDATE()
+                        WHERE ID_NODO_SENSOR = ? AND EMAIL_RESPONSABLE = ? 
+                    `; 
+
+                    pool.query(
+                        queryActualizarTokenDispositivo,
+                        [
+                            TokenDispositivo,
+                            data.id_nodo_sensor,
+                            data.email_responsable
+                        ],
+                        (error, result) =>{
+
+                            if(error){
+                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false)
+                            }else{
+                                return callback(null, null, null, true)
+                            }
+                        }
+                    );
+                }
+            }
+        )
+    },
 }
