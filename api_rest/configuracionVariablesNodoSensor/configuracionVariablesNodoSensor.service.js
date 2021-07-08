@@ -17,6 +17,10 @@ module.exports = {
             queryVerificarExistenciaVariableNodo,
             [data.id_nodo_sensor, data.nombre_variable],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
                 
                 const resultToJson = JSON.parse(JSON.stringify(result))[0];
 
@@ -40,6 +44,10 @@ module.exports = {
                         queryComprobarExistenciaConfiguracion,
                         [data.id_nodo_sensor, data.nombre_variable],
                         (error, result) => {
+
+                            if (error){
+                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                            }
 
                             const existenciaConfiguracionVarJson = JSON.parse(JSON.stringify(result))[0];
 
@@ -137,10 +145,15 @@ module.exports = {
             queryConsultarConfiguracionVariablesNodoSensorDinamico.query,
             [],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
                 
                if(result.length === 0){
                 return callback(`There is/are no record(s) for variable configuration with the parameter(s) set`, '03CVNS_02GET_GET02', null, false);
                }
+
                return callback(null, null,  result, true);
             }
         )
@@ -156,6 +169,11 @@ module.exports = {
             queryConsultarExistenciaConfiguracion,
             [data.id_configuracion],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`The register with ID_CONFIGURACION: ${data.id_configuracion} was not found`, '03CVNS_04DELETE_GET01', null, false);
                 }else if(result.length > 0){
@@ -169,9 +187,11 @@ module.exports = {
                         queryEliminarConfiguracionByID,
                         [data.id_configuracion],
                         (error, result) => {
+
                             if(error){
                                 return callback(`The register with ID_CONFIGURACION: ${data.id_configuracion} could not be deleted`, '03CVNS_04DELETE_DELETE02', null, false);
                             }
+                            
                             return callback(null, null, null, true);
                         }
                     )
