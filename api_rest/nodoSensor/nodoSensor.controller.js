@@ -32,7 +32,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '01NS_01POST_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -89,7 +89,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '01NS_02GET_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -152,7 +152,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '01NS_03PUT_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -208,7 +208,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '01NS_04DELETE_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -265,7 +265,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '01NS_05ACTTOKEN_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
             
             crearReporteLogEjecucion(errorData)

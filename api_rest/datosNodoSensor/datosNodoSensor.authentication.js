@@ -1,10 +1,27 @@
-const datosNodoSensorRouter = require('./datosNodoSensor.router');
+const datosNodoSensorRouterAuth = require('./datosNodoSensor.router.auth');
 
 const express = require('express');
 const datosNodoSensorAuth = express();
 
-const auth = require('../../shared/authentication');
+const auth = require('../../shared/authenticationDevice');
 
-datosNodoSensorAuth.use("/", datosNodoSensorRouter);
+datosNodoSensorAuth.use("/", (req, res) => {
+    auth(req, res)
+        .then(() => {
+
+            if(req.decoded === undefined){
+                req.error = ({
+                    success:false,
+                    statusCode:500,
+                    message: "decode undefined"
+                })
+                return req;
+            }else{
+                req.body.token = req.headers.authorization.replace('Bearer ', '');
+                console.log(req.body)
+                datosNodoSensorRouterAuth(req,res);
+            }
+        })
+});
 
 module.exports = datosNodoSensorAuth;

@@ -16,8 +16,8 @@ module.exports = {
         //Se verifica si la peticion tiene los parámetros necesarios
         const parametrosEndpoint = {
             id_nodo_sensor: true,
-            token: true,
             variables: true,
+
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);
@@ -28,7 +28,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '05DNS_01POST_PARAMETER00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -90,7 +90,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '05DNS_02GET_PARAMETER00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)

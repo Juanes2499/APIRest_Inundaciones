@@ -43,7 +43,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '07RLE_02GET_PARAMETERS00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crear_reporteLogEjecucion(errorData, (err, errorCode, result, state) =>{})

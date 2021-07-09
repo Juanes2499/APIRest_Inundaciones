@@ -11,7 +11,8 @@ if(auth === "true"){
     const variablesNodoSensorAuth = require('../variablesNodoSensor/variablesNodoSensor.authentication');
     const configuracionVariablesNodoSensorAuth = require('../configuracionVariablesNodoSensor/configuracionVariblesNodoSensor.authentication');
     const reglasNodoSensorAuth = require('../reglasNodoSensor/reglasNodoSensor.authentication');
-    const datosNodoSensorAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
+    const crearDatoAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
+    const datosNodoSensorRouter = require('../datosNodoSensor/datosNodoSensor.router');
 
     const erroresLogEjecucionAuth = require('../erroresLogEjecucion/erroresLogEjecucion.authentication');
     const ReporteErroresLogEjecucionAuth = require('../reporteLogEjecucion/reporteLogEjecucion.authentication');
@@ -20,7 +21,8 @@ if(auth === "true"){
     generalRouters.use("/variablesNodoSensor", variablesNodoSensorAuth);
     generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorAuth);
     generalRouters.use("/reglasNodoSensor", reglasNodoSensorAuth);
-    generalRouters.use("/datosNodoSensor", datosNodoSensorAuth);
+    generalRouters.use("/crearDato", crearDatoAuth);
+    generalRouters.use("/datosNodoSensor", datosNodoSensorRouter);
 
     generalRouters.use("/erroresLogEjecucion", erroresLogEjecucionAuth);
     generalRouters.use("/reporteErroresLogEjecucion", ReporteErroresLogEjecucionAuth);
@@ -33,6 +35,7 @@ if(auth === "true"){
     const variablesNodoSensorRouter = require('../variablesNodoSensor/variablesNodoSensor.router');
     const configuracionVariablesNodoSensorRouter = require('../configuracionVariablesNodoSensor/configuracionVariablesNodoSensor.router');
     const reglasNodoSensorRouter = require('../reglasNodoSensor/reglasNodoSensor.router');
+    const crearDatoAuth = require('../datosNodoSensor/datosNodoSensor.authentication');
     const datosNodoSensorRouter = require('../datosNodoSensor/datosNodoSensor.router');
 
     const erroresLogEjecucionRouter = require('../erroresLogEjecucion/erroresLogEjecucion.router');
@@ -42,6 +45,7 @@ if(auth === "true"){
     generalRouters.use("/variablesNodoSensor", variablesNodoSensorRouter);
     generalRouters.use("/configuracionVariablesNodoSensor", configuracionVariablesNodoSensorRouter);
     generalRouters.use("/reglasNodoSensor", reglasNodoSensorRouter);
+    generalRouters.use("/crearDato", crearDatoAuth);
     generalRouters.use("/datosNodoSensor", datosNodoSensorRouter);
 
     generalRouters.use("/erroresLogEjecucion", erroresLogEjecucionRouter);

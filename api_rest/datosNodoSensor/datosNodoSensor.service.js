@@ -29,6 +29,11 @@ module.exports = {
             queryCosultarExistenciaNodoSensor,
             [data.id_nodo_sensor],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} was not found`, '05DNS_01POST_GET01', null, false);
                 }else if(result.length > 0){
@@ -39,7 +44,7 @@ module.exports = {
                         return callback(`The token of the sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is not the same`, '05DNS_01POST_GET02', null, false);
                     }
 
-                    if(nodoSensorToJson.ESTADO != true){
+                    if(nodoSensorToJson.DISPOSITIVO_ACTIVO != true){
                         return callback(`The sensor node with ID_NODO_SENSOR: ${data.id_nodo_sensor} is disabled`, '05DNS_01POST_GET03', null, false);
                     }
 
@@ -65,6 +70,10 @@ module.exports = {
                         queryConsultarVariablesNodoSensor,
                         [data.id_nodo_sensor],
                         (error, result) => {
+
+                            if (error){
+                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                            }
 
                             const variablesNodoSensorToJson = JSON.parse(JSON.stringify(result));
 
@@ -101,6 +110,10 @@ module.exports = {
                                         queryConsultarRegla,
                                         [idNodoSensor, nombreVariable],
                                         (error, result) => {
+
+                                            if (error){
+                                                return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                                            }
 
                                             const datosNotificados = {
                                                 valorNotificado: false,
@@ -221,6 +234,11 @@ module.exports = {
             queryConsultarDatosNodoSensorDinamico.query,
             [],
             (error, result) => {
+
+                if (error){
+                    return callback(`There is/are error(s), please contact with the administrator`, null, null, false);
+                }
+
                 if(result.length === 0){
                     return callback(`There is/are no record(s) for data sensor node with the parameter(s) set`, '05DNS_02GET_GET02', null, false);
                 }else if (result.length > 0){

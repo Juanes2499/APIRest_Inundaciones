@@ -34,7 +34,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '02VNS_01POST_PARAMETER00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -94,7 +94,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '02VNS_02GET_PARAMETER00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -159,7 +159,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '02VNS_03PUT_PARAMETER00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
@@ -217,7 +217,7 @@ module.exports = {
             
             const errorData = {
                 codigo_error: '02VNS_04DELETE_PARAMETER00',
-                mensaje_retornado: `${verificarParametro.messageFaltantes} or ${verificarParametro.messageMalEscritos}, please set a all required parameters`
+                mensaje_retornado: `${verificarParametro.messageFaltantes}, please set a all required parameters`
             }
 
             crearReporteLogEjecucion(errorData)
