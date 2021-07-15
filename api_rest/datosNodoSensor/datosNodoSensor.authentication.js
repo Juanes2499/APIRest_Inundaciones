@@ -18,7 +18,6 @@ datosNodoSensorAuth.use("/", (req, res) => {
                 return req;
             }else{
                 req.body.token = req.headers.authorization.replace('Bearer ', '');
-                console.log(req.body)
                 datosNodoSensorRouterAuth(req,res);
             }
         })

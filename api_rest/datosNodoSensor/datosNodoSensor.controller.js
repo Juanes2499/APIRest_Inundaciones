@@ -17,7 +17,6 @@ module.exports = {
         const parametrosEndpoint = {
             id_nodo_sensor: true,
             variables: true,
-
         };
         
         const arrayParametrosJsonComparar = Object.keys(body);

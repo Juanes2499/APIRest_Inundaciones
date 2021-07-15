@@ -68,7 +68,7 @@ module.exports={
                             <p>Apreciado usuario ResCity, se ha registrado un dispositivo bajo su responsabilidad.</p>
                             <p>Para que el dispositivo pueda enviar datos hacía la plataforma debe usar el siguiente token de autenticación.</p> 
                             <p><b>Token: </b>${tokenDispositivo}</p>
-                            <p>Por favor evitar compartir este token de seguridad, en caso de perdida del token puede solicitar actulización del mismo.</p>
+                            <p>Por favor evitar compartir este token de seguridad, en caso de perdida del token puede solicitar actualización del mismo.</p>
                             <p>La vigencia del token es de 1 año, después de este tiempo es necesario actualizar el token.</p>
                             <br>
                             <br>
@@ -77,7 +77,7 @@ module.exports={
                             <br>
                             <p><h3>ResCity</h3></p>
                             <p><h4>Módulo Sensores</h4></p>
-                            <p><h4>Universidad Autonoma de Occidente de Cali</h4></p>
+                            <p><h4>Universidad Autónoma de Occidente de Cali</h4></p>
                             <p><img src="${process.env.IMG_CORREO}" width="180" height="100"/></p>
                             <br>
                             <p><h6>Si usted ha recibido este mensaje por error, por favor hacer caso omiso.</h6></p>
@@ -197,7 +197,7 @@ module.exports={
                                     <br>
                                     <p><h3>ResCity</h3></p>
                                     <p><h4>Módulo Sensores</h4></p>
-                                    <p><h4>Universidad Autonoma de Occidente de Cali</h4></p>
+                                    <p><h4>Universidad Autónoma de Occidente de Cali</h4></p>
                                     <p><img src="${process.env.IMG_CORREO}" width="180" height="100"/></p>
                                     <br>
                                     <p><h6>Si usted ha recibido este mensaje por error, por favor hacer caso omiso.</h6></p>
@@ -259,7 +259,7 @@ module.exports={
                                     <br>
                                     <p><h3>ResCity</h3></p>
                                     <p><h4>Módulo Sensores</h4></p>
-                                    <p><h4>Universidad Autonoma de Occidente de Cali</h4></p>
+                                    <p><h4>Universidad Autónoma de Occidente de Cali</h4></p>
                                     <p><img src="${process.env.IMG_CORREO}" width="180" height="100"/></p>
                                     <br>
                                     <p><h6>Si usted ha recibido este mensaje por error, por favor hacer caso omiso.</h6></p>
@@ -360,7 +360,7 @@ module.exports={
                                         <br>
                                         <p><h3>ResCity</h3></p>
                                         <p><h4>Módulo Sensores</h4></p>
-                                        <p><h4>Universidad Autonoma de Occidente de Cali</h4></p>
+                                        <p><h4>Universidad Autónoma de Occidente de Cali</h4></p>
                                         <p><img src="${process.env.IMG_CORREO}" width="180" height="100"/></p>
                                         <br>
                                         <p><h6>Si usted ha recibido este mensaje por error, por favor hacer caso omiso.</h6></p>

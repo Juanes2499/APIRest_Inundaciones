@@ -6,10 +6,10 @@ const auth = async(req, res, next) => {
     try {
         
         if(!req.headers.authorization){
-            return res.status(500).json({
+            return res.status(401).json({
                 success:false,
-                statusCode:500,
-                message: "There is no token"
+                statusCode:401,
+                message: "There is no Token, therefore, the process cannot be executed"
             })  
         }
 
@@ -18,20 +18,20 @@ const auth = async(req, res, next) => {
 
         jwt.verify(token, key, (err, decoded) => {      
             if (err) {
-                return res.status(500).json({
+                return res.status(401).json({
                     success:false,
-                    statusCode:500,
-                    message: "Invalid token"
+                    statusCode:401,
+                    message: "Invalid Token,  therefore, the process cannot be executed"
                 })  
             } else {
                 req.decoded = decoded;
             }
         })
     } catch (error) {
-        return res.status(500).json({
+        return res.status(401).json({
             success:false,
-            statusCode:500,
-            message: "Token error"
+            statusCode:401,
+            message: "Token error,  therefore, the process cannot be executed"
         })
     }
 }
