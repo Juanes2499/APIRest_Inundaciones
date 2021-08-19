@@ -61,6 +61,7 @@ module.exports = {
                     return: err
                 })
             }else if(state === true){
+                console.log(`API CONFIRMATION: The data for the sensor node with ID_NODO_SENSOR: ${body.id_nodo_sensor} was successfully created`)
                 return res.status(201).json({
                     success:state,
                     statusCode:201,

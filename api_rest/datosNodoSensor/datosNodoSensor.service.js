@@ -98,6 +98,10 @@ module.exports = {
                                 const nombreVariable = VariablesInsertar[i].toUpperCase();
                                 const valorDato = Object.values(data.variables)[i];
 
+                                if (valorDato === null){
+                                    return callback(`The data: {${nombreVariable}: ${valorDato}} could not be created because is null for the sensore node: ${idNodoSensor}`, '05DNS_01POST_POST06', null, false);
+                                }
+
                                 const validacionReglas = (callback) => {
 
                                     //Se hace el envio de la notificacion
