@@ -1,7 +1,13 @@
 const express = require('express');
 const generalRouters = express();
 
-let auth = process.env.AUTHENTICATION.toString();
+let auth = "false";
+
+try{
+    auth = process.env.AUTHENTICATION.toString();
+}catch{
+    auth = "false";
+}
 
 if(auth === "true"){
 
