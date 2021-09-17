@@ -3,6 +3,16 @@ const compararJson = require("../../shared/compararJson");
 const consultaDinamica = require("../../shared/consultaDinamica");
 const mqtt = require('mqtt');
 
+const { Kafka } = require('kafkajs')
+
+//Configuración Kafka
+const kafka = new Kafka({
+    clientId: process.env.KAFKA_CLIENT_ID,
+    brokers: [`${process.env.KAFKA_BROKER}`]
+})
+
+const producer = kafka.producer()
+
 //Conexión a MQTT
 const optionsMqtt = {
     clientId: process.env.MQTT_CLIENT_ID,
@@ -133,6 +143,29 @@ module.exports = {
 
                                                 if(regex.test(valorDato)){
 
+                                                    const messagePublish = {
+                                                        id_nodo_sensor: idNodoSensor,
+                                                        nombre_variable: nombreVariable,
+                                                        valor_dato: valorDato
+                                                    }
+
+                                                    const objMessagePublish= JSON.stringify(messagePublish); // payload is a buffer
+                                                    
+                                                    //Envio a Kafka
+                                                    var sendMessage = async () => {
+                                                        await producer.connect()
+                                                        await producer.send({
+                                                          topic: `${process.env.KAFKA_TOPIC}`,
+                                                          messages: [
+                                                            { key: `${process.env.KAFKA_kEY}`, value: objMessagePublish },
+                                                          ],
+                                                        })
+                                                        await producer.disconnect()
+                                                    }
+                                                    
+                                                    sendMessage();
+
+                                                    //Envio a MQTT
                                                     datosNotificados.valorNotificado = true;
                                                     datosNotificados.idRegla = reglaFromJson.ID_REGLA;
                                                     datosNotificados.expesionEvaluada = reglaFromJson.EXPRESION;
@@ -143,14 +176,6 @@ module.exports = {
                                                         retain: true,
                                                         qos: 2
                                                     };
-
-                                                    const messagePublish = {
-                                                        id_nodo_sensor: idNodoSensor,
-                                                        nombre_variable: nombreVariable,
-                                                        valor_dato: valorDato
-                                                    }
-
-                                                    const objMessagePublish= JSON.stringify(messagePublish); // payload is a buffer
 
                                                     clientMqtt.publish(topic, objMessagePublish, optionsPublish)
                                                 }
