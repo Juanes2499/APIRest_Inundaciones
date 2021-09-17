@@ -1,0 +1,983 @@
+{
+	"info": {
+		"_postman_id": "a8bf685c-1078-41c7-a9cb-aaf9b03455d8",
+		"name": "API Módulo Sensores",
+		"description": "# Introducción\nPor medio de esta API se puede configurar y administrar los nodos sensores de la plataforma ResCity.\n\n# Overview\nEs necesario tener conocimeintos sobre la plataforma ResCity y funcionamiento sobre una API Rest.\n\n# Autenticación\nPara poder consumir los Endpoints de los diferentes módulos de esta API es necesario autenticarse en el Core de la Plataforma ResCity que entrega un Token para poder consumir los Endpoints.\n\n# Código de errores\nPara poder realizar el control de errores de ejecución revisar los puntos 7 y 8 de la documentación de la API Módulo Sensores.\n\n# Consulta dinámica\nEste método permite realizar por medio de una peticición consultas similares a SQL, para realizar esta petición es necesario entregar los siguientes parámetros: seleccionar: se puede seleccionar un o varias columnas de la petición; sondición: permite filtrar información de diferente manera; agrupar: se puede agrupar columnas para poder realizar funciones de agregación; ordenar: se pasa una o varias columnas para ordernar la información de manera acedente o descendente. Si se desar filtar información se debe agregar los siguientes parámetros en el parámetro condición: valor_dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector_logico: puede ser un AND o OR.Si se desea traer toda la información únicamente se debe piner los parámetros en el cuerpo de la petición de la siguiente manera: \"seleccionar\": \"\", \"condicion\": {}, \"agrupar\": \"\", \"ordenar\": \"\"",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Test API",
+			"item": [
+				{
+					"name": "Prueba API ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api"
+							]
+						},
+						"description": "Por medio de esta petición podemos validar el funcionamiento de la API, se realiza un petición tipo GET de la siguiente manera:"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "1. Nodo Sensor",
+			"item": [
+				{
+					"name": "Crear un nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjE4OTUxMjg2LCJleHAiOjE2MTg5NTQ4ODZ9.HDP5VtQDZLc-_CFKg4UTz2Iw0azOwo6EV0Jty4pjgC4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"marca\":\"Marca de la tarjeta de adquisición del nodo sensor\",\r\n\t\"referencia\":\"Referencia de la tarjeta de adquisición del nodo sensor\",\r\n\t\"latitud\": \"Posición - latitud del dispositivo (número)\",\r\n\t\"longitud\": \"Posición - longitud del dispositivo (número)\",\r\n\t\"email_responsable\": \"Correo de la persona encargada de administrar el nodo sensor\"\r\n}       ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/nodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"nodoSensor"
+							]
+						},
+						"description": "Para crear un nodo sensor se necesita los siguientes parámetros:\r\nMarca: marca de la tarjeta de adquisición de datos;\r\nReferencia: referencia de la tarjeta de adquisición de datos;\r\nLatitud: posición - latitud del dispositivo;\r\nLongitud: posición - longitud del dispositivo;\r\nemail_responsable: correo electrónico de la persona encargada de administrar el dispositivo para el envio del token.\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/nodoSensor/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"nodoSensor",
+								"get"
+							]
+						},
+						"description": "Para consultar un nodo sensor se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre el nodo sensor se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR.\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_nodo_sensor\": \"id del nodo sensor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/nodoSensor/delete",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"nodoSensor",
+								"delete"
+							]
+						},
+						"description": "Para elimianr un nodo sensor, es necesario proporcionar el ID del nodo sensor."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_nodo_sensor\": \"id del nodo sensor\",\r\n    \"marca\":\"Marca de la tarjeta de adquisición del nodo sensor\",\r\n    \"referencia\":\"Referencia de la tarjeta de adquisición del nodo sensor\",\r\n    \"latitud\": \"Posición - latitud del dispositivo (número)\",\r\n    \"longitud\": \"Posición - longitud del dispositivo (número)\",\r\n    \"email_responsable\": \"Correo de la persona encargada de administrar el nodo sensor\",\r\n    \"dispositivo_activo\": \"true/false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/nodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"nodoSensor"
+							]
+						},
+						"description": "Para actualizar el nodo sensor es necesario pasarle los parámetros de creación nodo sensor y adicionalmente el ID del nodo sensor y el dispositivo_activo del nodo sensor."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar token nodo sensor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_nodo_sensor\": \"ID de l nodo sensor a actualizar el token\",\r\n    \"email_responsable\": \"Email del responsable encargado del nodo sensor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/nodoSensor/actualizarTokenNodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"nodoSensor",
+								"actualizarTokenNodoSensor"
+							]
+						},
+						"description": "Para actualizar el token del nodo sensor es necesario pasar el ID del nodo sensor y el correo del responsable del dispositivo"
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo está relacionado con toda la administración de los dispositivos o nodos sensores que estén registrados en la API Rest. En este módulo se puede crear, consultar, actualizar y eliminar nodos sensores o dispositivos.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Variables Nodo Sensor",
+			"item": [
+				{
+					"name": "Crear variable nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre_variable\": \"Nombre de la variable, no puede contener espacios, solo soporta guiones bajos (_), letras y números\",\r\n    \"detalles\": \"Descripción de la variable\",\r\n    \"tipo_dato\": \"Tipo de dato de la varianble como booleano, string, number, etc\",\r\n    \"unidad_medida\":\"Unidad de medida de la variable como C°, Km/h, etc\",\r\n    \"rango_min\":\"Valor mínimo que puede ser el dato de la variable\",\r\n    \"rango_max\":\"Valor máximo que puede ser el dato de la variable\",\r\n    \"estado\": \"true/false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/variablesNodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"variablesNodoSensor"
+							]
+						},
+						"description": "Para crear un variable es necesario proporcionar los siguientes parámetros: nombre_variable: nombre de la variable, no puede tener espacio, solo se puede usar guion bajo (_), números y letras; detalles: descripción de la variable, tipo_dato: corresponde al tipo de dato de la variable;unidad_medida: corresponse a la unidad de medida de la varibe (C°, Km/h, etc); rango_min: es el rango mínimo de la variable; rango_max: es el rango máximo de la variable; estado: si la variable esta activa (true) y si la variable no esta activa (false)."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar variables nodo sensor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_variable\": \"ID de la variable\",\r\n    \"nombre_variable\": \"Nombre de la variable, no puede contener espacios, solo soporta guiones bajos (_), letras y números\",\r\n    \"detalles\": \"Descripción de la variable\",\r\n    \"tipo_dato\": \"Tipo de dato de la varianble como booleano, string, number, etc\",\r\n    \"unidad_medida\":\"Unidad de medida de la variable como C°, Km/h, etc\",\r\n    \"rango_min\":\"Valor mínimo que puede ser el dato de la variable\",\r\n    \"rango_max\":\"Valor máximo que puede ser el dato de la variable\",\r\n    \"estado\": \"true/false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/variablesNodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"variablesNodoSensor"
+							]
+						},
+						"description": "Para actualizar las variables del nodo sensor es necesario pasarle los parámetros de creación de la variable de nodo sensor y adicionalmente el ID de la variable del nodo sensor."
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar variables del nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/variablesNodoSensor/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"variablesNodoSensor",
+								"get"
+							]
+						},
+						"description": "Para consultar un variable del nodo sensor se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre la variable se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR.\r\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar variable nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_variable\":\"ID de la variable\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/variablesNodoSensor/delete",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"variablesNodoSensor",
+								"delete"
+							]
+						},
+						"description": "Para elimianr una variable del nodo sensor, es necesario proporcionar el ID de la variable.\r\n"
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo está relacionado con la administración de las variables físicas que un nodo sensor puede medir. En este módulo se puede crear, consultar, actualizar y eliminar variables.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Configuración Variables – Nodo Sensor",
+			"item": [
+				{
+					"name": "Crear configuración variable nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_nodo_sensor\":\"ID del nodo sensor\",\r\n    \"nombre_variable\": \"Nombre de la variable que se desea asociar al nodo sensor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/configuracionVariablesNodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"configuracionVariablesNodoSensor"
+							]
+						},
+						"description": "Para crear una configuración de variable nodo sensor es necesario proporcionar el ID del nodo sensor y la variable nodo sensor que se desea asociar al nodo sensor."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar configuración variable nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI1MDE4NTkwLCJleHAiOjE2MjUwMjIxOTB9.rq7x_lio0Frzq0AbGF5iYU7xlHboSArgETGG7zW1sQI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_configuracion\": \"ID de la configuración de variable - nodo sensor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/configuracionVariablesNodoSensor/delete",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"configuracionVariablesNodoSensor",
+								"delete"
+							]
+						},
+						"description": "Para eliminar una configuración de variable nodo sensor es necesario pasar el id de la configuración."
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar configuración variable nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI0OTMwOTY1LCJleHAiOjE2MjQ5MzQ1NjV9.PKln_JUIZMLh6nrhja-U9-S3BRmTZdpHM3V5tVJ50BY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/configuracionVariablesNodoSensor/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"configuracionVariablesNodoSensor",
+								"get"
+							]
+						},
+						"description": "Para consultar una configuración variable del nodo sensor se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre la configuración se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR."
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo está relacionado con la administración de la configuración para asociar las variables a los nodos sensores. En este módulo se puede crear, consultar, y eliminar configuraciones o asociaciones.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Configuración Reglas - Variable - Nodo Sensor",
+			"item": [
+				{
+					"name": "Crear regla variable - nodo sensor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_nodo_sensor\": \"Id del nodo sensor con el que se quiere configurar la regla\",\r\n    \"nombre_variable\": \"Nombre de la variable con la que se quiere configurar la regla\",\r\n    \"expresion\": \"Expresión regular para evaluar la regla\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/reglasNodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"reglasNodoSensor"
+							]
+						},
+						"description": "Para crear una regla en primera instancia es neceario haber asociado la variable al nodo sensor (Esta configuración se realiza en el punto 3 de esta guía), los parámetros que se deben proporcionar en el cuerpo de la petición son: id_nodo_sensor, nombre_varible y expresión."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar regla variable - nodo sensor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_regla\": \"ID de la regla que se quiere actualizar\",\r\n    \"id_nodo_sensor\": \"Id del nodo sensor con el que se quiere configurar la regla\",\r\n    \"nombre_variable\": \"Nombre de la variable con la que se quiere configurar la regla\",\r\n    \"expresion\": \"Expresión regular para evaluar la regla\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/reglasNodoSensor",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"reglasNodoSensor"
+							]
+						},
+						"description": "Para actualizar una regla en primera se debe realizar y contar con los mismos parámetros para crear un configuración de regla adicionalemnte se debe proporcionar en los parámetros del cuerpo de la petición id_regla."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar regla varible - nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI1MDE4NTkwLCJleHAiOjE2MjUwMjIxOTB9.rq7x_lio0Frzq0AbGF5iYU7xlHboSArgETGG7zW1sQI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_regla\": \"ID de la regla que se quiere eliminar\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/reglasNodoSensor/delete",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"reglasNodoSensor",
+								"delete"
+							]
+						},
+						"description": "Para eliminar una regla se debe proporcionar el id de la regla que se quiere eliminar en el cupero de la petición."
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar reglas variable - nodo sensor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI1MDE4NTkwLCJleHAiOjE2MjUwMjIxOTB9.rq7x_lio0Frzq0AbGF5iYU7xlHboSArgETGG7zW1sQI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/reglasNodoSensor/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"reglasNodoSensor",
+								"get"
+							]
+						},
+						"description": "Para consultar una regla se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre la regla se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR."
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo está relacionado con la administración de la configuración de reglas y variables – nodo sensor para determinar cuándo un dato deber ser enviado o notificado al broker de Kafka. En este módulo se puede crear, consultar, actualizar y eliminar reglas. Hay que tener en cuenta que para configurar un registro la variable y el nodo sensor ya debieron ser asociados en la parte de Configuración Variables – Nodo Sensor. (punto 3 de esta documentación).",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Datos Nodo Sensor",
+			"item": [
+				{
+					"name": "Consultar datos nodo sensor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/datosNodoSensor/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"datosNodoSensor",
+								"get"
+							]
+						},
+						"description": "Para consultar un dato se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre la datos nodo sensor se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR."
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo permite consultar los datos almacenados.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Enviar Datos Nodo Sensor",
+			"item": [
+				{
+					"name": "Crear dato",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9kaXNwb3NpdGl2byI6IjBjY2EyZjVkLWYzOWQtNGIyZi05MGU2LWI0YjFmOGM3OTY2NCIsIm1hcmNhIjoiQXJ1ZGlubyIsInJlZmVyZW5jaWEiOiJEVUUiLCJsYXRpdHVkIjoiMSIsImxvbmdpdHVkIjoiMiIsImVtYWlsX3Jlc3BvbnNhYmxlIjoianVhbi5uaWNob3lAdWFvLmVkdS5jbyIsImlhdCI6MTYyNTcxMTI5N30.ukK3sySS5ltBEeMRQZXXsmgloG11Xfws9OBgQ5bv4Ws",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_nodo_sensor\": \"ID del nodo sensor que quiere enviar datos a la API\",\r\n    \"variables\":{\r\n        //Variables que el dispositivo tiene configurado (se debe poner el nombre de la variable en minúsculas)\r\n        \"temperatura_ambiente\": \"40.5\",\r\n        \"humedad_ambiente\": \"5\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/crearDato",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"crearDato"
+							]
+						},
+						"description": "Para crear un datos se debe proprocionar los siguiente parámetros en el cuerpo de la petición: id_nodo_sensor, token, variables, el token de autorización para dispositivos es dado por el Core de la platofarma "
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo permite el ingreso y el almacenamiento de los datos enviados por los nodos sensores, además, según la configuración de reglas establecidas se evalúa el datos y se toma la decisión de enviar o no enviar el dato al broker de Kafka",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Errores Log de Ejecución",
+			"item": [
+				{
+					"name": "Consultar errores log de ejecución",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRF9VU1VBUklPIjoiYjhkNGM3ZDQtNzE4ZC0xMWViLWJmMGUtMDg5Nzk4ODUyMGJmIiwiTk9NQlJFUyI6Ikp1YW4gRXN0ZWJhbiIsIkFQRUxMSURPUyI6Ik5pY2hveSBMYXJyYcOxYWdhIiwiRU1BSUwiOiJqdWFuLm5pY2hveUB1YW8uZWR1LmNvIiwiUEFTU1dPUkRfQVVURU5USUNBQ0lPTiI6IiQyYiQxMCQuRWFaOExKalFwSk9uY1lDVTBiQ1AueEd6STQ5SjBhNEc3bnZsWjJkeTNjUjdDWm1ObXNxLiIsIlBBU1NXT1JEX0FDVElWQSI6MSwiQUNUSVZPIjoxLCJGRUNIQV9DUkVBQ0lPTiI6IjIwMjEtMDItMTdUMDU6MDA6MDAuMDAwWiIsIkhPUkFfQ1JFQUNJT04iOiIyMTowNTowNyIsIlJPTEVTIjp7IlJPTF9BRE1JTklTVFJBRE9SIjp0cnVlLCJST0xfU1VQRVJfVVNVQVJJTyI6dHJ1ZX0sIlBFUk1JU09TIjp7Ik1TX0FVVEVOVElDQUNJT05fTlMiOnsiTU9EX1VTVUFSSU9TIjp0cnVlLCJNT0RfTUlDUk9TRVJWSUNJT1MiOnRydWUsIk1PRF9NT0RVTE9TIjp0cnVlLCJNT0RfUk9MRVMiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX01JQ1JPU0VSVklDSU9TX01PRFVMT1MiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1VTVUFSSU9TIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9ST0xFUyI6dHJ1ZSwiTU9EX0RJU1BPU0lUSVZPUyI6dHJ1ZX0sIk1TX1NFTlNPUkVTX05TIjp7Ik1PRF9OT0RPX1NFTlNPUkVTIjp0cnVlLCJNT0RfVkFSSUFCTEVTX05PRE9fU0VOU09SIjp0cnVlLCJNT0RfQ09ORklHVVJBQ0lPTl9WQVJJQUJMRVNfTk9ET19TRU5TT1IiOnRydWUsIk1PRF9DT05GSUdVUkFDSU9OX1JFR0xBU19OT0RPX1NFTlNPUiI6dHJ1ZSwiTU9EX0RBVE9TX05PRE9fU0VOU09SRVMiOnRydWV9fSwiaWF0IjoxNjI1MDIyOTAzLCJleHAiOjE2MjUwMjY1MDN9.hHb0pVEaw529DnWbQ6vo_3ly0qXcg0HHxzvb8fDOv6s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/erroresLogEjecucion/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"erroresLogEjecucion",
+								"get"
+							]
+						},
+						"description": "Para consultar un error de ejecución se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre los errores de ejecución de la API se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR."
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo permite consultar los tipos de errores que se pueden presentar durante la ejecución de algún proceso.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "8. Reportes Log de ejecución",
+			"item": [
+				{
+					"name": "Consultar reporte errores de ejecución",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"seleccionar\":\"Columnas o claves de la respuesta de la petición, las columnas se separan por comas(,)\",\r\n    \"condicion\":{\r\n        //Si se desea traer toda la información sin ningún filtro este no se pone nada en este parámetro del cuerpo, si se desea filtrar la información se realiza lo siguiente: \r\n         \"NOMBRE VARIABLE EN MAYÚSCULAS\": {\r\n            \"conector_logico\":\"Pueder ser un AND o OR (se pone si hay más de una condición)\",\r\n            \"operador\": \"=, like, >, <, <>, =>, =<\",\r\n            \"valor_condicion\": \"Valor que se desa filtrar\"\r\n        }\r\n    },\r\n    \"agrupar\":\"Se establecen las columnas por las cuales se quiere agrupar para realizar alguna función de agregación\",\r\n    \"ordenar\":\"Se ponen las columnas por las cuales se quiere ordenar la información\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST_API_SENSORES}}/api/reporteErroresLogEjecucion/get",
+							"host": [
+								"{{HOST_API_SENSORES}}"
+							],
+							"path": [
+								"api",
+								"reporteErroresLogEjecucion",
+								"get"
+							]
+						},
+						"description": "Para consultar un reporte se hace por medio de la consulta dinámica, para realizar esta peticioón es necesario entregar los siguientes parámetros: Seleccionar, Condición, Agrupar y Ordenar. Si se desar filtar información sobre un reporte se debe agregar los siguientes parámetros en el parámetro condición: valor dato: corresponde al valor por el cual se quiere filtrar; operador: puede ser un igual (=), mayor que (>), menor que (<) o combinados; conector lógico: puede ser un AND o OR."
+					},
+					"response": []
+				}
+			],
+			"description": "Este módulo permite consultar los errores que se han presentado durante la ejecución de algún proceso.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
