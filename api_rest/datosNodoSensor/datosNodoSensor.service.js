@@ -144,6 +144,7 @@ module.exports = {
                                                 if(regex.test(valorDato)){
 
                                                     const messagePublish = {
+                                                        topic: process.env.KAFKA_TOPIC,
                                                         id_nodo_sensor: idNodoSensor,
                                                         nombre_variable: nombreVariable,
                                                         valor_dato: valorDato
