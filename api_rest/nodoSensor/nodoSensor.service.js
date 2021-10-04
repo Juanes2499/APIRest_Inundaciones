@@ -61,9 +61,9 @@ module.exports={
                 }else{
                     sendEmail(
                         data.email_responsable,
-                        `Creación dispositivo ResCity`,
+                        `Creación dispositivo ResCity ${uuid}`,
                         `
-                            <p><h1>Creación dispositivo ResCity </h1></p>
+                            <p><h1>Creación dispositivo ResCity ${uuid}</h1></p>
                             <br>
                             <p>Apreciado usuario ResCity, se ha registrado un dispositivo bajo su responsabilidad.</p>
                             <p>Para que el dispositivo pueda enviar datos hacía la plataforma debe usar el siguiente token de autenticación.</p> 
