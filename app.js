@@ -1,6 +1,7 @@
 require("dotenv").config()
 var cors = require('cors');
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 const generalRouter = require('./api_rest/generalRouter/general.router');
@@ -16,7 +17,11 @@ app.get("/api",(req, res) =>{
     });
 });
 
-app.use(express.json());
+
+// Middleware
+app.use(morgan('combined')); //It is used when it is in a development environment to be able to print a log in the console
+app.use(express.urlencoded({extended: false})) //Allows the server to understand forms sent from HTML
+app.use(express.json()); //Allows the server to receive JSON formats and understand them
 
 //Router
 app.use("/api", generalRouter);

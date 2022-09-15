@@ -50,7 +50,7 @@ module.exports={
                 CURTIME()
             )
         `;
-
+        
         pool.query(
             queryCrearDispositivos,
             [uuid, tokenDispositivo, data.marca, data.referencia, data.latitud, data.longitud, data.email_responsable],
